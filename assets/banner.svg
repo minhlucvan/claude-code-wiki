@@ -1,4 +1,4 @@
-<svg width="1200" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Claude Code: Source Code Analysis">
+<svg width="1200" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Claude Code Wiki">
   <defs>
     <!-- Background gradient -->
     <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -120,7 +120,7 @@
           fill="url(#brandGradient)"
           text-anchor="middle"
           filter="url(#glow)">
-      Claude Code
+      Claude Code Wiki
     </text>
 
     <!-- Subtitle -->
@@ -131,7 +131,7 @@
           fill="#c0caf5"
           text-anchor="middle"
           letter-spacing="4">
-      SOURCE CODE ANALYSIS
+      ARCHITECTURE • PATTERNS • ANALYSIS
     </text>
 
     <!-- Accent line -->

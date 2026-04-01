@@ -1,16 +1,14 @@
 <div align="center">
-  <img src="./assets/banner.svg" alt="Claude Code: Source Code Analysis Banner" width="100%">
+  <img src="./assets/banner.svg" alt="Claude Code Wiki" width="100%">
 </div>
 
-# Claude Code: Source Code Analysis & Competitive Study
+# Claude Code Wiki
 
-> **How Claude Code achieves 2-5x faster tool execution, unlimited conversation memory, and 90% cost savings through architectural innovations competitors can't easily replicate**
+> **The complete guide to Claude Code's architecture, patterns, and competitive innovations — Learn how it achieves 2-5x faster execution, unlimited conversation memory, and 90% cost savings**
 
 ## What This Is
 
-This is a comprehensive competitive analysis of **Claude Code's source code** — a deep dive into the architectural innovations that give it unfair advantages over Cursor, Continue, and Aider.
-
-By analyzing **512,000 lines of production TypeScript**, this project reveals:
+**Claude Code Wiki** is the definitive guide to understanding Claude Code's architecture, engineering patterns, and competitive advantages. Through analysis of **512,000 lines of production TypeScript**, this wiki reveals:
 
 - **10 architectural innovations** that make Claude Code superior to competitors
 - **Streaming tool execution** that runs tools while the LLM streams (2-5x faster UX)
@@ -22,9 +20,9 @@ By analyzing **512,000 lines of production TypeScript**, this project reveals:
 
 **This isn't just another AI coding tool** — it's built by the team that created Claude, with first-party API access and optimization opportunities competitors don't have.
 
-## Why This Exists
+## Why This Wiki Exists
 
-Claude Code represents production-grade AI tooling at scale. It solves hard problems that competitors struggle with:
+This wiki exists to document the production-grade patterns and architectural decisions that make Claude Code exceptional. Learn how it solves hard problems that competitors struggle with:
 
 - **Speed**: Most tools wait for LLM completion before running tools sequentially. Claude Code runs tools concurrently while streaming, achieving 2-5x faster multi-tool operations.
 - **Memory**: Competitors use basic context truncation or require manual cleanup. Claude Code uses a 5-layer autocompaction pipeline for unlimited conversations.
@@ -32,7 +30,7 @@ Claude Code represents production-grade AI tooling at scale. It solves hard prob
 - **Security**: Most tools use regex for command parsing. Claude Code uses AST-level Bash parsing for deep security analysis.
 - **Scale**: Built for fleet-scale economics, optimizing for Gtok/week at organization level.
 
-By studying this codebase, you'll learn patterns and techniques for building production AI tools.
+This wiki documents these patterns and techniques so you can learn from and apply them to your own AI tools.
 
 ## What You'll Learn
 
@@ -66,11 +64,11 @@ By studying this codebase, you'll learn patterns and techniques for building pro
 
 **Legend**: ✅ Advanced implementation • ⚠️ Basic implementation • ❌ Not available
 
-## Project Structure
+## Wiki Structure
 
 ```
 claude-code-wiki/
-├── docs/                           # 10 comprehensive analysis guides
+├── docs/                           # 10 comprehensive wiki guides
 │   ├── README.md                   # Wiki navigation and overview
 │   ├── 01-competitive-advantages.md   # The 10 unfair advantages
 │   ├── 02-architecture-overview.md    # System design and data flow
@@ -88,15 +86,15 @@ claude-code-wiki/
     └── package.json                # Dependencies and scripts
 ```
 
-## Quick Start
+## Quick Start Guide
 
-Choose your path based on what you want to learn:
+Navigate the wiki based on your goals:
 
 ### 🎯 Building AI Coding Tools
 
 **Start here**: [Competitive Advantages](./docs/01-competitive-advantages.md)
 
-Learn the 10 innovations that make Claude Code superior:
+Discover the 10 architectural innovations:
 - Streaming tool execution for 2-5x faster UX
 - Multi-agent orchestration with cache sharing
 - Context management for unlimited conversations
@@ -131,7 +129,7 @@ Get actionable patterns for production TypeScript/React:
 - [Terminal UX](./docs/06-terminal-ux.md) for React/Ink patterns
 - [Production Engineering](./docs/09-production-engineering.md) for optimization techniques
 
-## Documentation Index
+## Wiki Index
 
 | Guide | Description | Key Topics |
 |-------|-------------|------------|
@@ -157,56 +155,56 @@ Get actionable patterns for production TypeScript/React:
 | **Agent Types** | 6 specialized |
 | **Runtime** | Bun (high performance) |
 | **UI Framework** | React + Ink |
-| **Documentation Pages** | 10 comprehensive guides |
+| **Wiki Pages** | 10 comprehensive guides |
 
-## Who This Is For
+## Who This Wiki Is For
 
 ### Developers Building AI Coding Assistants
-Learn production-grade patterns for streaming execution, context management, and multi-agent orchestration. See how to achieve 2-5x faster UX and 90% cost reduction.
+Learn production-grade patterns for streaming execution, context management, and multi-agent orchestration. Understand how to achieve 2-5x faster UX and 90% cost reduction.
 
 ### Product Teams Evaluating AI Tools
-Understand the architectural differences between Claude Code, Cursor, Continue, and Aider. See measurable competitive advantages in speed, cost, and capabilities.
+Compare architectural approaches between Claude Code, Cursor, Continue, and Aider. Understand measurable competitive advantages in speed, cost, and capabilities.
 
 ### Engineers Learning Advanced TypeScript/React
-Study React in CLI architecture, state management at scale, and production optimization patterns from a 512K LOC codebase.
+Explore React in CLI architecture, state management at scale, and production optimization patterns from a 512K LOC codebase.
 
 ### Technical Architects
-Analyze system design decisions, security architecture, and fleet-scale engineering patterns for production AI tools.
+Study system design decisions, security architecture, and fleet-scale engineering patterns for production AI tools.
 
-## Analysis Methodology
+## Wiki Methodology
 
-This competitive analysis is based on:
+This wiki is built from:
 
-- **Full source code** from Claude Code npm package source maps (March 2026)
+- **Full source code analysis** of Claude Code npm package source maps (March 2026)
 - **Hands-on exploration** and testing of all major features
-- **Comparative analysis** with Cursor, Continue, and Aider architectures
+- **Comparative research** with Cursor, Continue, and Aider architectures
 - **Code-level investigation** of 512,000 lines of TypeScript
-- **Documentation extraction** from comments, types, and implementation patterns
+- **Pattern extraction** from comments, types, and implementation details
 
-All insights are derived from actual code, not marketing materials or black-box testing.
+All documentation is derived from actual code, not marketing materials or black-box testing.
 
-## Contributing
+## Contributing to the Wiki
 
-Found something interesting? Have additional insights? This is a living document meant to capture:
+Found something interesting? Have additional insights? This wiki is a living document meant to capture:
 
 - "Wow moments" in the architecture
-- Competitive intelligence and differentiation
 - Actionable patterns for building AI tools
 - Design decisions and tradeoffs
+- Competitive insights and differentiation
 
 Issues and pull requests welcome for:
-- Additional analysis or corrections
+- Additional documentation or corrections
 - New discoveries in the codebase
+- Pattern explanations and examples
 - Comparative insights with other tools
-- Practical applications of patterns
 
 ## License & Attribution
 
-**Source Code**: Claude Code is proprietary software by Anthropic. This analysis is for educational purposes only.
+**Source Code**: Claude Code is proprietary software by Anthropic. This wiki is for educational purposes only.
 
-**Analysis Content**: Documentation and analysis © 2026. Shared for educational and competitive research purposes.
+**Wiki Content**: Documentation and analysis © 2026. Shared for educational and research purposes.
 
-**Methodology**: Source code extracted from npm source maps and analyzed through code review, not reverse engineering.
+**Methodology**: Source code extracted from npm source maps and documented through code review, not reverse engineering.
 
 ---
 
