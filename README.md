@@ -6,6 +6,8 @@
 
 > **The complete guide to Claude Code's architecture, patterns, and competitive innovations — Learn how it achieves 2-5x faster execution, unlimited conversation memory, and 90% cost savings**
 
+**English** | [Tiếng Việt](./README.vi.md) | [中文](./README.zh.md) | [Español](./README.es.md) | [日本語](./README.ja.md)
+
 ## What This Is
 
 **Claude Code Wiki** is the definitive guide to understanding Claude Code's architecture, engineering patterns, and competitive advantages. Through analysis of **512,000 lines of production TypeScript**, this wiki reveals:
