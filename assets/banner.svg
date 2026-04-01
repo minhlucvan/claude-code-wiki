@@ -1,0 +1,179 @@
+<svg width="1200" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Claude Code: Source Code Analysis">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#09090f" />
+      <stop offset="50%" style="stop-color:#0f0f1a" />
+      <stop offset="100%" style="stop-color:#09090f" />
+    </linearGradient>
+
+    <!-- Main brand gradient (purple to orange) -->
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6" />
+      <stop offset="50%" style="stop-color:#5769f7" />
+      <stop offset="100%" style="stop-color:#d7774f" />
+    </linearGradient>
+
+    <!-- Glow gradient -->
+    <radialGradient id="purpleGlow">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0" />
+    </radialGradient>
+
+    <radialGradient id="orangeGlow">
+      <stop offset="0%" style="stop-color:#d7774f;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#d7774f;stop-opacity:0" />
+    </radialGradient>
+
+    <radialGradient id="blueGlow">
+      <stop offset="0%" style="stop-color:#5769f7;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#5769f7;stop-opacity:0" />
+    </radialGradient>
+
+    <!-- Blur filter for glow effects -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle noise texture -->
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="discrete" tableValues="0 0.02"/>
+      </feComponentTransfer>
+      <feBlend mode="overlay" in="SourceGraphic"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="400" fill="url(#bgGradient)"/>
+
+  <!-- Noise texture overlay -->
+  <rect width="1200" height="400" fill="#09090f" filter="url(#noise)" opacity="0.3"/>
+
+  <!-- Abstract flowing shapes -->
+
+  <!-- Large purple glow orb - top left -->
+  <circle cx="150" cy="100" r="200" fill="url(#purpleGlow)" opacity="0.4"/>
+
+  <!-- Orange glow orb - bottom right -->
+  <circle cx="1050" cy="320" r="180" fill="url(#orangeGlow)" opacity="0.4"/>
+
+  <!-- Blue glow orb - center -->
+  <circle cx="600" cy="200" r="150" fill="url(#blueGlow)" opacity="0.3"/>
+
+  <!-- Abstract flowing lines and curves -->
+  <g opacity="0.15" stroke="url(#brandGradient)" stroke-width="2" fill="none">
+    <!-- Flowing curve 1 -->
+    <path d="M -50,200 Q 200,100 400,150 T 800,120 Q 1000,100 1250,180" />
+    <!-- Flowing curve 2 -->
+    <path d="M -50,250 Q 300,180 500,220 T 900,200 Q 1100,190 1250,250" />
+    <!-- Flowing curve 3 -->
+    <path d="M -50,150 Q 250,80 450,100 T 850,90 Q 1050,80 1250,140" />
+  </g>
+
+  <!-- Abstract geometric elements -->
+  <g opacity="0.1" fill="none" stroke="#8b5cf6" stroke-width="1">
+    <!-- Hexagons scattered -->
+    <path d="M 200,80 l 20,-35 l 40,0 l 20,35 l -20,35 l -40,0 Z"/>
+    <path d="M 900,280 l 15,-26 l 30,0 l 15,26 l -15,26 l -30,0 Z"/>
+    <path d="M 450,320 l 12,-20 l 24,0 l 12,20 l -12,20 l -24,0 Z"/>
+  </g>
+
+  <g opacity="0.08" fill="none" stroke="#d7774f" stroke-width="1">
+    <!-- Circles scattered -->
+    <circle cx="750" cy="90" r="25"/>
+    <circle cx="320" cy="340" r="18"/>
+    <circle cx="1080" cy="150" r="22"/>
+  </g>
+
+  <!-- Abstract code-like patterns -->
+  <g opacity="0.06" font-family="monospace" font-size="12" fill="#8b5cf6">
+    <text x="80" y="340">const analyze = () =&gt;</text>
+    <text x="850" y="80">async function decode()</text>
+    <text x="380" y="90">interface Agent</text>
+    <text x="950" y="370">export default</text>
+  </g>
+
+  <!-- Main content area with glass morphism effect -->
+  <g>
+    <!-- Glass background -->
+    <rect x="100" y="120" width="1000" height="200" rx="20"
+          fill="#1a1b26" opacity="0.4"
+          stroke="url(#brandGradient)" stroke-width="1" stroke-opacity="0.3"/>
+
+    <!-- Inner glow -->
+    <rect x="100" y="120" width="1000" height="200" rx="20"
+          fill="none"
+          stroke="url(#brandGradient)" stroke-width="2" opacity="0.2" filter="url(#glow)"/>
+
+    <!-- Main title -->
+    <text x="600" y="200"
+          font-family="system-ui, -apple-system, sans-serif"
+          font-size="72"
+          font-weight="700"
+          fill="url(#brandGradient)"
+          text-anchor="middle"
+          filter="url(#glow)">
+      Claude Code
+    </text>
+
+    <!-- Subtitle -->
+    <text x="600" y="250"
+          font-family="system-ui, -apple-system, sans-serif"
+          font-size="24"
+          font-weight="300"
+          fill="#c0caf5"
+          text-anchor="middle"
+          letter-spacing="4">
+      SOURCE CODE ANALYSIS
+    </text>
+
+    <!-- Accent line -->
+    <line x1="400" y1="270" x2="800" y2="270"
+          stroke="url(#brandGradient)"
+          stroke-width="2"
+          opacity="0.5"/>
+  </g>
+
+  <!-- Decorative corner elements -->
+  <g opacity="0.3" stroke="url(#brandGradient)" stroke-width="2" fill="none">
+    <!-- Top left corner -->
+    <path d="M 30,30 L 30,60 M 30,30 L 60,30"/>
+    <!-- Top right corner -->
+    <path d="M 1170,30 L 1140,30 M 1170,30 L 1170,60"/>
+    <!-- Bottom left corner -->
+    <path d="M 30,370 L 30,340 M 30,370 L 60,370"/>
+    <!-- Bottom right corner -->
+    <path d="M 1170,370 L 1140,370 M 1170,370 L 1170,340"/>
+  </g>
+
+  <!-- Floating particles -->
+  <g opacity="0.4" fill="#8b5cf6">
+    <circle cx="180" cy="180" r="2"/>
+    <circle cx="920" cy="240" r="1.5"/>
+    <circle cx="450" cy="140" r="1"/>
+    <circle cx="780" cy="300" r="2"/>
+    <circle cx="340" cy="280" r="1.5"/>
+    <circle cx="1050" cy="200" r="1"/>
+  </g>
+
+  <g opacity="0.4" fill="#d7774f">
+    <circle cx="220" cy="320" r="1.5"/>
+    <circle cx="880" cy="160" r="2"/>
+    <circle cx="520" cy="350" r="1"/>
+    <circle cx="1020" cy="120" r="1.5"/>
+  </g>
+
+  <g opacity="0.4" fill="#5769f7">
+    <circle cx="680" cy="130" r="1.5"/>
+    <circle cx="280" cy="220" r="1"/>
+    <circle cx="960" cy="340" r="2"/>
+    <circle cx="580" cy="310" r="1"/>
+  </g>
+</svg>
