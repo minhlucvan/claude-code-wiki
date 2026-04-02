@@ -90,35 +90,32 @@ See [Architecture Overview](./docs/02-architecture-overview.md) for detailed sub
 
 ## Source Code Repository
 
-This wiki analyzes the **official Claude Code npm package** available at:
+⚠️ **IMPORTANT DISCLOSURE**: This wiki analyzes a **leaked/unofficial version** of Claude Code source code, not an official public release.
 
-- 📦 **NPM Package**: [`@anthropic-ai/claude-code`](https://www.npmjs.com/package/@anthropic-ai/claude-code)
-- 🔗 **Official Website**: [claude.com/code](https://claude.com/code)
-- 📖 **Official Docs**: [docs.anthropic.com/en/docs/claude-code](https://docs.anthropic.com/en/docs/claude-code)
+**Source of analysis:**
+- 📁 **Leaked codebase** - Unofficial source code obtained through unknown channels
+- 📅 **Version analyzed** - Appears to be from March 2026 timeframe
+- ⚠️ **Not officially distributed** - This is NOT available on npm or official channels
+- 🔗 **Official product**: [claude.com/code](https://claude.com/code) (closed source)
 
 **Analysis methodology:**
-1. **Source extraction** - npm package source maps (March 2026 release v0.8.4)
-2. **Code analysis** - 512,000 lines of TypeScript across ~1,900 files
+1. **Source extraction** - Leaked source code files (unknown origin)
+2. **Code analysis** - ~512,000 lines of TypeScript across ~1,900 files
 3. **Pattern documentation** - Architecture patterns, design decisions, performance optimizations
 4. **Comparative study** - Side-by-side analysis with Cursor, Continue, and Aider
 
-**Verification:**
+**Cannot be independently verified:**
 ```bash
-# Install and verify the analyzed package
-npm install -g @anthropic-ai/claude-code@0.8.4
-
-# Inspect package contents
-npm ls @anthropic-ai/claude-code --depth=0
-
-# View source maps (used for this analysis)
-ls node_modules/@anthropic-ai/claude-code/dist/*.map
+# The analyzed code is NOT publicly available
+# There is NO official npm package to verify against
+# Readers cannot reproduce this analysis from public sources
 ```
 
 **Code references throughout this wiki:**
-- All file paths reference the npm package structure (e.g., `src/QueryEngine.ts`)
-- Code snippets are extracted from actual source maps
-- Architecture diagrams derived from code organization and imports
-- Performance metrics measured from production package
+- All file paths reference the leaked codebase structure (e.g., `src/QueryEngine.ts`)
+- Code snippets are extracted from leaked source files
+- Architecture diagrams derived from leaked code organization
+- Metrics may not match official production version
 
 ## Quick Start & Common Questions
 
@@ -295,92 +292,95 @@ Study system design decisions, security architecture, and fleet-scale engineerin
 
 ### How This Wiki Was Built
 
-This is **not speculation or reverse engineering** — it's rigorous code analysis:
+⚠️ **CRITICAL DISCLAIMER**: This analysis is based on **leaked source code**, not official public releases.
 
-✅ **Source verification**
-- Analyzed official npm package `@anthropic-ai/claude-code@0.8.4`
-- Extracted from publicly distributed source maps
-- Cross-referenced with official Anthropic documentation
-- Tested hands-on with production package
+❌ **Cannot be independently verified**
+- Analyzed **leaked/unofficial** Claude Code source code
+- Source obtained through **unknown channels** (not official distribution)
+- **No public version** exists to cross-reference
+- Readers **cannot reproduce** this analysis from public sources
+- May not match official production version
 
-✅ **Comprehensive coverage**
-- 512,000 lines of TypeScript reviewed
+⚠️ **Significant limitations**
+- Code may be **incomplete** or from development branch
+- May contain **removed/unreleased** features
+- Architecture may have **changed** since leak
+- No guarantee of **accuracy** vs current production
+- Cannot verify **intentionality** of design decisions
+
+✅ **What we can say**
+- 512,000 lines of TypeScript reviewed from leaked source
 - 1,900+ files analyzed across 10 major subsystems
 - 40+ tools documented with implementation details
 - 85+ slash commands catalogued with patterns
-
-✅ **Reproducible analysis**
-- All code references include file paths (e.g., `src/QueryEngine.ts`)
-- Architecture diagrams match actual import graph
-- Performance metrics measured from production builds
-- Anyone can verify by installing the same npm package
+- Patterns appear consistent with production TypeScript best practices
 
 ✅ **Independent research**
 - Not affiliated with Anthropic (educational analysis only)
 - Comparative analysis with 3 competitors (Cursor, Continue, Aider)
-- Patterns validated against production TypeScript best practices
-- Architecture decisions explained with tradeoffs
+- Focus on learning architectural patterns
+- Architecture decisions explained with reasoning
 
-### Validation Checklist
+### Why This Analysis Has Value Despite Limitations
 
-**You can verify this wiki by:**
+**Educational insights:**
+- Documents sophisticated AI tool architecture patterns
+- Shows production-grade TypeScript/React implementation
+- Demonstrates cost optimization techniques
+- Illustrates security considerations for AI coding tools
 
-1. **Install the package**
-   ```bash
-   npm install -g @anthropic-ai/claude-code@0.8.4
-   ```
-
-2. **Check source maps exist**
-   ```bash
-   ls node_modules/@anthropic-ai/claude-code/dist/*.map
-   ```
-
-3. **Verify file structure**
-   ```bash
-   # Our wiki documents these subsystems:
-   # - src/QueryEngine.ts (1,297 lines)
-   # - src/tools/ (40+ tools)
-   # - src/components/ (80+ React components)
-   # - src/services/ (API, MCP, OAuth, telemetry)
-   ```
-
-4. **Cross-reference with official docs**
-   - Compare our architecture with [docs.anthropic.com](https://docs.anthropic.com/en/docs/claude-code)
-   - Validate competitive claims with public benchmarks
-   - Check feature descriptions against official release notes
-
-### Why Trust This Analysis?
+**Comparative value:**
+- Reveals architectural differences vs competitors
+- Highlights innovation in streaming execution
+- Documents multi-agent orchestration patterns
+- Shows production engineering practices
 
 **Transparency:**
-- Every claim cites specific files and line numbers
+- Every claim cites specific files from leaked source
 - Code snippets include source location comments
 - Architecture diagrams show actual module dependencies
-- No proprietary or confidential information used
+- Honest about limitations and uncertainty
 
-**Expertise:**
-- Analysis by developers experienced with production TypeScript/React
-- Patterns validated against 512K LOC real-world codebase
-- Comparative study against 3 established AI coding tools
-- Deep understanding of LLM tool orchestration challenges
+### Important Caveats
 
-**Educational value:**
-- Focus on learning patterns, not commercial competition
-- Actionable insights for building your own AI tools
-- Architecture decisions explained with reasoning
-- Tradeoffs documented for informed decision-making
+**You should be skeptical:**
+- ⚠️ This is leaked code, not official documentation
+- ⚠️ May not represent current production version
+- ⚠️ Features described may not exist in actual product
+- ⚠️ Architecture may have evolved since leak
+- ⚠️ Cannot be verified against official sources
+
+**Use this wiki to:**
+- ✅ Learn architectural patterns for AI tools
+- ✅ Understand potential approaches to hard problems
+- ✅ Study production TypeScript/React patterns
+- ✅ Compare with publicly documented competitors
+
+**Do NOT use this wiki to:**
+- ❌ Make claims about official Claude Code capabilities
+- ❌ Assume this represents current production version
+- ❌ Quote as authoritative source on Claude Code
+- ❌ Bypass Anthropic's official documentation
 
 ## Wiki Methodology
 
+⚠️ **Based on leaked source code** - See important disclaimers above
+
 This wiki is built from:
 
-- **Full source code analysis** of Claude Code npm package source maps (March 2026 v0.8.4)
-- **Hands-on exploration** and testing of all major features
-- **Comparative research** with Cursor, Continue, and Aider architectures
-- **Code-level investigation** of 512,000 lines of TypeScript across 1,900 files
+- **Source code analysis** of leaked Claude Code codebase (appears to be March 2026)
+- **Code-level investigation** of ~512,000 lines of TypeScript across ~1,900 files
 - **Pattern extraction** from comments, types, implementation details, and git history
-- **Performance profiling** using Bun's built-in tooling and custom instrumentation
+- **Comparative research** with Cursor, Continue, and Aider (publicly documented architectures)
+- **Architectural analysis** of component relationships and data flow
 
-All documentation is derived from actual code, not marketing materials or black-box testing.
+**What we did NOT do:**
+- ❌ Test with actual running production version
+- ❌ Verify features against official product
+- ❌ Profile performance of real deployments
+- ❌ Access official internal documentation
+
+All documentation is derived from leaked source code files. This may not match official production version or marketing materials.
 
 ## Contributing to the Wiki
 
@@ -415,30 +415,40 @@ Issues and pull requests welcome for:
 
 ### Fair Use & Educational Purpose
 
-This analysis qualifies as **fair use** under copyright law:
+⚠️ **LEGAL UNCERTAINTY**: Analysis of **leaked proprietary code** raises serious legal questions.
 
-✅ **Transformative purpose**
-- Original: Executable software for AI coding assistance
+**Potential fair use arguments:**
+
+⚠️ **Transformative purpose** (uncertain)
+- Original: Proprietary executable software
 - This work: Educational documentation of architecture patterns
 - Adds commentary, analysis, and comparative insights
+- **BUT**: Based on unauthorized leak, not lawful access
 
-✅ **Limited scope**
+⚠️ **Limited scope** (partial)
 - Analyzes architecture and design patterns only
-- Does not reproduce complete source code
-- Focuses on learning, not commercial competition
+- Does not redistribute complete source code
 - Code snippets are minimal excerpts for illustration
+- **BUT**: Reveals proprietary implementation details
 
-✅ **No market substitution**
+⚠️ **Market impact** (questionable)
 - Cannot be used as replacement for Claude Code
-- Does not diminish commercial value
-- Promotes understanding that may increase adoption
-- Benefits Anthropic by educating potential users
+- May not diminish direct commercial value
+- **BUT**: Reveals competitive advantages and trade secrets
+- **BUT**: May reduce perceived value of proprietary status
 
-✅ **Public interest**
-- Advances knowledge in AI tool architecture
-- Helps developers build better AI systems
-- Provides transparency for technical evaluation
-- Contributes to open discussion of LLM tooling patterns
+⚠️ **Public interest** (debatable)
+- May advance knowledge in AI tool architecture
+- May help developers build better AI systems
+- **BUT**: Source obtained through unauthorized means
+- **BUT**: Violates Anthropic's control over disclosure
+
+**Honest assessment:**
+This wiki exists in a **legal gray area**. While we believe there is educational value and transformative purpose, the use of leaked proprietary source code creates significant legal uncertainty. Anthropic could potentially challenge this under:
+- Copyright infringement
+- Trade secret misappropriation
+- Breach of contract (if leaker violated NDA)
+- Computer fraud laws (depending on leak circumstances)
 
 ### Ethical Guidelines
 
@@ -473,21 +483,42 @@ This analysis qualifies as **fair use** under copyright law:
 ### Disclaimer
 
 ```
-EDUCATIONAL PURPOSE ONLY
+⚠️ CRITICAL LEGAL DISCLAIMER ⚠️
 
-This wiki is an independent educational analysis of Claude Code's
-architecture. It is not affiliated with, endorsed by, or sponsored
-by Anthropic, PBC.
+ANALYSIS OF LEAKED PROPRIETARY CODE
 
-The information is provided "as is" without warranty. Use at your
-own risk. We do not guarantee accuracy, completeness, or currency
-of information.
+This wiki analyzes LEAKED SOURCE CODE of Claude Code, a proprietary
+product of Anthropic, PBC. This analysis is based on UNAUTHORIZED
+disclosure of confidential information.
 
-This analysis does not constitute legal, financial, or professional
-advice. Consult appropriate professionals for your specific needs.
+NOT AFFILIATED: This wiki is not affiliated with, endorsed by, or
+sponsored by Anthropic, PBC. Anthropic has NOT authorized this
+analysis or the disclosure of their source code.
 
-Trademarks: "Claude" and "Claude Code" are trademarks of Anthropic,
-PBC. All other trademarks are property of their respective owners.
+NO WARRANTY: Information provided "as is" without warranty of any kind.
+Use at your own legal risk. We make no guarantees about accuracy,
+completeness, or currency of information.
+
+LEGAL RISK: Using or relying on this wiki may carry legal risks.
+The source code was obtained through unauthorized means. Distribution
+or use of leaked proprietary information may violate:
+- Copyright law
+- Trade secret law
+- Computer fraud statutes
+- Contractual obligations (NDAs)
+
+NOT LEGAL ADVICE: This analysis does not constitute legal, financial,
+or professional advice. Consult appropriate professionals before using
+information from leaked sources.
+
+TAKEDOWN POLICY: If you represent Anthropic and wish to request
+removal of this content, please contact us immediately at [contact].
+We will promptly comply with legitimate takedown requests.
+
+TRADEMARKS: "Claude" and "Claude Code" are trademarks of Anthropic,
+PBC. All other trademarks are property of respective owners.
+
+USE AT YOUR OWN RISK
 ```
 
 ### Citation & Attribution
