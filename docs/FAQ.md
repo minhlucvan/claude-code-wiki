@@ -1,949 +1,305 @@
-# Claude Code: Frequently Asked Questions
+# Claude Code Architecture: Frequently Asked Questions
 
-> **Quick answers to common developer questions about Claude Code**
+> **Quick answers to common questions about Claude Code's architecture and implementation**
 
-This FAQ provides practical, actionable answers to the most common questions developers ask when learning Claude Code. For deep technical details, see the [full documentation](./README.md).
+This FAQ helps you understand the architectural decisions, design patterns, and engineering techniques documented in this wiki. These answers are based on analysis of Claude Code's production codebase (512,000 lines of TypeScript).
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-- [Core Concepts](#core-concepts)
-- [Workflow & Best Practices](#workflow--best-practices)
-- [Integrations & Extensions](#integrations--extensions)
-- [Performance & Optimization](#performance--optimization)
-- [Troubleshooting](#troubleshooting)
+- [Understanding the Architecture](#understanding-the-architecture)
+- [Streaming Execution](#streaming-execution)
+- [Context Management](#context-management)
+- [Multi-Agent System](#multi-agent-system)
+- [Terminal UI](#terminal-ui)
 - [Security & Permissions](#security--permissions)
-- [Advanced Topics](#advanced-topics)
-- [Enterprise & Fleet Management](#enterprise--fleet-management)
-- [Sources & Further Reading](#sources--further-reading)
+- [Integration Ecosystem](#integration-ecosystem)
+- [Performance & Optimization](#performance--optimization)
+- [Implementation Patterns](#implementation-patterns)
+- [Applying These Patterns](#applying-these-patterns)
 
 ---
 
-## Getting Started
+## Understanding the Architecture
 
-### How do I install Claude Code?
+### What makes Claude Code's architecture different from other AI coding tools?
 
-**Via npm (recommended):**
-```bash
-npm install -g @anthropic/claude-code
+**10 key architectural innovations:**
+
+1. **Streaming tool execution** - Tools run concurrently while LLM streams (2-5x faster)
+2. **5-layer autocompaction** - Unlimited conversation length without manual cleanup
+3. **Prompt cache fork pattern** - 90% cost reduction for multi-agent workflows
+4. **React terminal UI** - Production-grade component architecture in CLI
+5. **AST-level Bash parsing** - Deep security analysis instead of regex
+6. **Dual-role MCP** - Both client and server capabilities
+7. **6 specialized agents** - Purpose-built for specific workflows
+8. **Build-time feature flags** - Dead code elimination (37% smaller bundles)
+9. **First-party API access** - Anthropic-specific optimizations
+10. **Fleet-scale thinking** - Cost optimization at org level (Gtok/week)
+
+See [Competitive Advantages](./01-competitive-advantages.md) for detailed comparison with Cursor, Continue, and Aider.
+
+### How is Claude Code organized internally?
+
+**Layered architecture with clear separation:**
+
+```
+Terminal UI Layer (React/Ink)
+    ↓
+Command Layer (85 slash commands)
+    ↓
+Query Engine (LLM lifecycle, streaming, tools)
+    ↓
+Tool System (40+ self-contained tools)
+    ↓
+Service Layer (API, MCP, OAuth, telemetry)
+    ↓
+Runtime (Bun)
 ```
 
-**Via native installer:**
-- macOS: Download from [claude.com/code](https://claude.com/code)
-- Windows: Download from [claude.com/code](https://claude.com/code)
-- Linux: Use npm or build from source
+**Key subsystems:**
+- **Terminal UI**: 80+ React components for CLI rendering
+- **Query Engine**: 1,297 lines managing conversation state
+- **Tools**: 40+ tools in isolated directories
+- **Services**: Claude API, MCP client, OAuth, telemetry
 
-**Common issues:**
-- **Permission errors**: Don't use `sudo npm install`. Fix npm permissions following [npm docs](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
-- **Windows**: Run terminal as Administrator for initial install
-- **macOS**: May need to allow app in System Preferences > Security
+See [Architecture Overview](./02-architecture-overview.md) for complete system design.
 
-See [Architecture Overview](./02-architecture-overview.md#runtime) for technical details.
+### Why use React for a CLI tool?
 
-### What are the system requirements?
+**Benefits of React + Ink architecture:**
 
-**Minimum:**
-- Node.js 18+ or Bun 1.0+
-- 4GB RAM
-- macOS 10.15+, Windows 10+, or Linux
+1. **Declarative UI** - Easier to manage complex terminal state
+2. **Component reuse** - Share patterns between CLI and web
+3. **Rich ecosystem** - Use React hooks, context, patterns
+4. **Maintainability** - Better than imperative terminal manipulation
+5. **Professional UX** - Progress bars, spinners, multi-pane layouts
 
-**Recommended:**
-- Bun runtime (2x faster startup)
-- 8GB RAM for large codebases
-- SSD for better file I/O performance
-
-**Storage:** ~80MB for core installation, ~200MB with all MCP servers
-
-### How do I configure CLAUDE.md?
-
-Create `CLAUDE.md` in your project root:
-
-```markdown
-# Project: My Web App
-
-## Tech Stack
-- Next.js 14 with App Router
-- TypeScript 5.0
-- Tailwind CSS
-- PostgreSQL with Prisma
-
-## Coding Style
-- Use functional components with hooks
-- Prefer server components by default
-- Always include TypeScript types
-- Follow Airbnb style guide
-
-## Important Context
-- API routes in `app/api/`
-- Database schema in `prisma/schema.prisma`
-- Shared components in `components/ui/`
-
-## Do NOT modify
-- `package-lock.json` (use yarn)
-- `prisma/migrations/` (create new migrations instead)
+**Example component:**
+```tsx
+function ToolExecutionView({ tools }) {
+  return (
+    <Box flexDirection="column">
+      {tools.map(tool => (
+        <Box key={tool.id}>
+          {tool.status === 'running' && <Spinner />}
+          <Text>{tool.name}</Text>
+          <ProgressBar percent={tool.progress} />
+        </Box>
+      ))}
+    </Box>
+  )
+}
 ```
 
-**Why Claude ignores CLAUDE.md:**
-- File not in project root (must be exactly `CLAUDE.md`)
-- Claude hasn't read it yet - explicitly ask "read CLAUDE.md first"
-- Too vague - be specific about tech stack and patterns
+See [Terminal UX](./06-terminal-ux.md) for component architecture.
 
-See [Best Practices](https://code.claude.com/docs/en/best-practices) for examples.
+### What's the technology stack?
 
-### How do I authenticate?
+**Core technologies:**
 
-**Via OAuth (recommended):**
-```bash
-claude login
-```
-Opens browser for authentication. Token stored securely in system keychain.
+| Component | Technology | Why? |
+|-----------|-----------|------|
+| **Runtime** | Bun | 2x faster startup, native TypeScript |
+| **UI Framework** | React + Ink | Declarative CLI components |
+| **Schema Validation** | Zod | Type inference, composable |
+| **CLI Framework** | Commander.js | Industry standard arg parsing |
+| **State Management** | Custom + React Context | Simpler than Redux, immutable |
+| **API Client** | Custom streaming | SSE parsing, retry logic |
 
-**Via API key:**
-```bash
-export ANTHROPIC_API_KEY=sk-ant-...
-claude
-```
+**Bundle size:** ~28MB (consumer), ~45MB (enterprise with features)
 
-**Check auth status:**
-```bash
-claude whoami
-```
+**Startup time:** ~600ms (optimized with parallel prefetch)
 
-See [Architecture Overview](./02-architecture-overview.md#oauth-20) for PKCE flow details.
+See [Architecture Overview](./02-architecture-overview.md#technology-stack) for details.
 
 ---
 
-## Core Concepts
+## Streaming Execution
 
-### What's the difference between streaming execution and traditional LLM tools?
+### How does streaming tool execution work?
 
-**Traditional tools (sequential):**
+**Traditional approach (sequential):**
 ```
-[Wait 2s for LLM] → [Execute tool 1] → [Execute tool 2] → [Send results]
-Total: 6-8 seconds
-```
-
-**Claude Code (streaming):**
-```
-[LLM starts streaming]
-  ↓ (0.5s) Tool 1 detected → Execute immediately
-  ↓ (1.0s) Tool 2 detected → Execute in parallel
-  ↓ (2.0s) LLM completes, tools already done
-Total: 2-3 seconds (2-5x faster)
+[Wait 2s for LLM] → [Tool 1: 2s] → [Tool 2: 2s] = 6s total
 ```
 
-**Key benefits:**
-- Tools execute while LLM streams (no waiting)
-- Safe operations run concurrently (FileRead, Grep, Glob)
-- Real-time progress feedback in UI
-
-See [Streaming Execution](./03-streaming-execution.md) for benchmarks.
-
-### How does context management work with autocompaction?
-
-**5-layer progressive compaction:**
-
+**Claude Code (streaming + concurrent):**
 ```
-Layer 1 (50 msgs):  Keep all messages
-Layer 2 (100 msgs): Recent 25 + Compact 25→5 tokens
-Layer 3 (200 msgs): Recent 25 + Mid 25→5 + Old 50→5
-Layer 4 (400 msgs): Recent 25 + 3 compaction layers (175→15)
-Layer 5 (500+ msgs): Recent 25 + 4 compaction layers (375→20)
+[LLM streaming: 2s]
+  ├─ [0.5s] Tool 1 detected → Execute (2s)
+  └─ [1.0s] Tool 2 detected → Execute parallel (2s)
+Total: 3s (2x faster)
 ```
 
-**Result:** Unlimited conversation length without manual cleanup.
+**Implementation:**
+1. **SSE parser** detects tool calls as they stream
+2. **Concurrent executor** runs safe tools in parallel
+3. **Parameter accumulator** handles incremental JSON
+4. **Progress tracker** updates UI in real-time
 
-**Cost savings:** 85% reduction for long conversations (500+ messages).
+See [Streaming Execution](./03-streaming-execution.md) for complete implementation.
 
-See [Context Management](./04-context-management.md) for implementation details.
+### Which tools can run concurrently?
 
-### What is the prompt cache fork pattern?
-
-**Normal approach (expensive):**
-```
-Agent 1: Create cache (10K tokens) = $0.0375
-Agent 2: Create cache (10K tokens) = $0.0375
-Agent 3: Create cache (10K tokens) = $0.0375
-Total: $0.1125
-```
-
-**Fork pattern (efficient):**
-```
-Base: Create cache once (10K tokens) = $0.0375
-Agent 1: Read cache (10K tokens) = $0.003
-Agent 2: Read cache (10K tokens) = $0.003
-Agent 3: Read cache (10K tokens) = $0.003
-Total: $0.0465 (59% savings)
-```
-
-**At scale:** $24K/year savings for 1000 multi-agent tasks/day.
-
-See [Competitive Advantages](./01-competitive-advantages.md#3-prompt-cache-fork-optimization) for details.
-
-### How do multi-agent workflows save costs?
-
-**Specialized agents use fewer tools:**
-
-- **General-purpose agent:** 40 tools, larger prompts, slower, more expensive
-- **Explore agent:** 8 tools (Glob, Grep, Read only), 3x faster, 3x cheaper
-
-**Example task:** "Find all API endpoints"
-- General-purpose: $0.15, 45 seconds
-- Explore agent: $0.05, 15 seconds
-
-**With cache fork:** Shared context across agents reduces cost by 90%.
-
-See [Multi-Agent Orchestration](./05-multi-agent-orchestration.md) for architecture.
-
----
-
-## Workflow & Best Practices
-
-### When should I use Plan Mode?
-
-**Use Plan Mode for:**
-- New feature implementation (unclear approach)
-- Multi-file changes (3+ files affected)
-- Architectural decisions (multiple valid approaches)
-- Bug fixes requiring investigation
-- Refactoring existing code
-
-**Example:**
-```
-User: "Add user authentication"
-Claude: [Enters Plan Mode]
-  - Analyzes codebase structure
-  - Proposes JWT vs session approach
-  - Identifies files to modify
-  - Gets user approval before coding
-```
-
-**According to best practices:** 80% of sessions should use Plan Mode to ensure alignment before implementation.
-
-**Don't use Plan Mode for:**
-- Simple one-line fixes
-- Adding console.log for debugging
-- Obvious typo corrections
-
-See [Architecture Overview](./02-architecture-overview.md#2-query-engine) for implementation.
-
-### How do I prevent context window degradation?
-
-**Claude Code does this automatically** via autocompaction. No action needed.
-
-**Manual optimization (optional):**
-```bash
-/clear              # Clear conversation (lose all context)
-/compact            # Manually trigger compaction (usually automatic)
-/remember [key]     # Save important context explicitly
-```
-
-**Signs you need /clear:**
-- Conversation has drifted off-topic
-- Working on completely unrelated tasks
-- Context from hours ago is no longer relevant
-
-**Best practice:** Let autocompaction handle it. Only use `/clear` when starting a new unrelated task.
-
-### When should I run /clear?
-
-**Run /clear when:**
-- Starting a completely different project
-- Context from previous task is irrelevant
-- Conversation has become confused or off-track
-
-**Don't run /clear when:**
-- Just reached 50-100 messages (autocompaction handles this)
-- Working on related tasks in same codebase
-- Want to preserve any previous context
-
-**Example workflow:**
-```bash
-# Morning: Working on authentication
-$ claude
-> "Add JWT authentication"
-[150 messages, autocompaction at msg 50 and 100]
-
-# Afternoon: Switching to different project
-$ /clear
-> "Now help with my Python data pipeline"
-```
-
-See [Context Management](./04-context-management.md#the-problem-context-window-limits) for automatic vs manual strategies.
-
-### Should I use bypass permissions mode?
-
-**Permission modes:**
-
-| Mode | When to Use | Risk Level |
-|------|-------------|-----------|
-| **Ask** (default) | Learning, careful work | Low |
-| **Allow** | Trusted operations | Medium |
-| **Bypass** | Rapid prototyping, scripts | High |
-| **Deny** | Read-only exploration | Zero |
-
-**Bypass mode pros:**
-- Faster workflow (no interruptions)
-- Better for rapid iteration
-
-**Bypass mode cons:**
-- Can execute destructive commands
-- No safety net for mistakes
-
-**Recommendation:**
-- **Development:** Use Ask or Allow
-- **Production:** Never use Bypass
-- **Scripts/automation:** Bypass with careful review
-
-See [Security Model](./07-security-model.md) for AST-based permission system.
-
-### How do I debug errors using MCP?
-
-**Enable MCP debug mode:**
-```bash
-export MCP_DEBUG=1
-claude
-```
-
-**View Chrome DevTools-style logs:**
-```bash
-# In another terminal
-tail -f ~/.claude/logs/mcp-debug.log
-```
-
-**Common MCP errors:**
-
-| Error | Cause | Fix |
-|-------|-------|-----|
-| `MCP server not found` | Server not installed | `npm install -g @modelcontextprotocol/server-*` |
-| `Connection timeout` | Server crashed | Check server logs, restart Claude |
-| `Tool not available` | Wrong server config | Verify `claude.json` MCP settings |
-| `Authentication failed` | Missing credentials | Set env vars (e.g., `DATABASE_URL`) |
-
-**Check MCP server status:**
-```bash
-/mcp-list           # List connected servers
-/mcp-install [pkg]  # Install new server
-/mcp-remove [name]  # Remove server
-```
-
-See [Integration Ecosystem](./08-integration-ecosystem.md#mcp-client) for MCP architecture.
-
----
-
-## Integrations & Extensions
-
-### How do I build a custom MCP server?
-
-**Minimal MCP server (TypeScript):**
+**Concurrency determined by tool interface:**
 
 ```typescript
-// my-tools-server.ts
-import { Server } from '@modelcontextprotocol/sdk/server/index.js'
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
-
-const server = new Server({
-  name: 'my-tools',
-  version: '1.0.0',
-}, {
-  capabilities: {
-    tools: {},
-  },
-})
-
-// Define tool
-server.setRequestHandler('tools/list', async () => ({
-  tools: [{
-    name: 'greet',
-    description: 'Greet someone',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-      },
-      required: ['name'],
-    },
-  }],
-}))
-
-// Implement tool
-server.setRequestHandler('tools/call', async (request) => {
-  if (request.params.name === 'greet') {
-    const { name } = request.params.arguments
-    return {
-      content: [{ type: 'text', text: `Hello, ${name}!` }],
-    }
-  }
-})
-
-// Start server
-const transport = new StdioServerTransport()
-await server.connect(transport)
-```
-
-**Register in `~/.claude/config.json`:**
-```json
-{
-  "mcpServers": {
-    "my-tools": {
-      "command": "node",
-      "args": ["/path/to/my-tools-server.ts"]
-    }
-  }
+interface Tool {
+  isConcurrencySafe(input): boolean
+  isReadOnly(input): boolean
 }
 ```
 
-See [MCP documentation](https://modelcontextprotocol.io/docs) for full API.
+**Always safe (read-only):**
+- FileRead, Grep, Glob (no side effects)
+- WebFetch, WebSearch (external, independent)
 
-### Can I use Claude Code with VS Code?
+**Never safe (writes):**
+- FileEdit, FileWrite (file conflicts)
+- Bash with destructive commands
 
-**Yes, via Bridge Mode:**
+**Conditional:**
+- Bash with read-only commands (git status, ls)
+- FileEdit to different files (no conflict)
 
-```bash
-# Terminal 1: Start Claude Code in bridge mode
-claude --bridge
+See [Streaming Execution](./03-streaming-execution.md#2-concurrent-executor) for safety checks.
 
-# VS Code: Install Claude Code extension
-# Extension connects to running bridge
-```
+### How are mid-stream errors handled?
 
-**Bridge mode allows:**
-- Use Claude Code tools in VS Code
-- Share conversation between terminal and IDE
-- Leverage both UX paradigms simultaneously
+**Error recovery pattern:**
 
-**Limitations:**
-- Requires Claude Code running in terminal
-- Some terminal-specific features unavailable in IDE
-
-See [Integration Ecosystem](./08-integration-ecosystem.md#ide-bridges) for architecture.
-
-### How do I create custom skills?
-
-**Skill anatomy:**
-
-```
-.claude/skills/my-skill/
-├── SKILL.md           # Skill documentation
-├── prompts/
-│   └── system.md      # System prompt for skill
-├── references/        # Reference docs
-│   └── api.md
-└── _meta.json         # Skill metadata
-```
-
-**Example skill metadata (`_meta.json`):**
-```json
-{
-  "name": "my-skill",
-  "version": "1.0.0",
-  "description": "Custom workflow for my project",
-  "allowedTools": ["FileRead", "Bash", "Grep"],
-  "requiredFeature": null
-}
-```
-
-**System prompt (`prompts/system.md`):**
-```markdown
-You are an expert in running my custom workflow.
-
-When the user invokes /my-skill:
-1. Read project configuration
-2. Run validation checks
-3. Generate report
-```
-
-**Invoke skill:**
-```bash
-/my-skill
-```
-
-See [Integration Ecosystem](./08-integration-ecosystem.md#skill-system) for conditional loading.
-
-### How do I integrate with CI/CD pipelines?
-
-**Headless automation:**
-
-```bash
-# Non-interactive mode
-echo "Run tests and fix failures" | claude --headless --project=/path/to/repo
-```
-
-**GitHub Actions example:**
-```yaml
-name: Claude Code Review
-on: [pull_request]
-
-jobs:
-  review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: npm install -g @anthropic/claude-code
-      - run: |
-          echo "Review this PR for issues" | \
-          claude --headless --project=$GITHUB_WORKSPACE
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-```
-
-**Best practices:**
-- Use `--headless` for non-interactive
-- Set `--max-turns` to limit API calls
-- Use `--permissions=bypass` with caution
-- Capture output to file for review
-
-See [Production Engineering](./09-production-engineering.md) for fleet-scale patterns.
-
----
-
-## Performance & Optimization
-
-### Why is my conversation getting slower?
-
-**Likely causes:**
-
-1. **Context window filling up** (rare - autocompaction prevents this)
-2. **Large file reads** in conversation history
-3. **Many MCP servers** loading on startup
-4. **Slow tool execution** (network requests, heavy computation)
-
-**Check token usage:**
-```bash
-/tokens             # Show current conversation tokens
-/cost               # Show total cost and token breakdown
-```
-
-**Solutions:**
-
-```bash
-/clear              # Nuclear option: start fresh
-/compact            # Manually trigger compaction (usually automatic)
-/mcp-remove [slow]  # Disable slow MCP servers
-```
-
-**Expected performance:**
-- Fresh conversation: <100ms response start
-- 100 messages: ~200ms response start (autocompaction at 50)
-- 500+ messages: ~300ms response start (multiple compactions)
-
-See [Architecture Overview](./02-architecture-overview.md#performance-characteristics) for benchmarks.
-
-### How much does autocompaction cost vs. benefit?
-
-**Cost breakdown for 500-message conversation:**
-
-| Item | Without Compaction | With Compaction | Savings |
-|------|-------------------|-----------------|---------|
-| Input tokens/request | 500K | 30K | 94% |
-| Input cost/request | $1.50 | $0.09 | 94% |
-| Compaction LLM calls | $0 | $0.75 (10 calls) | -$0.75 |
-| **Total (500 requests)** | **$750** | **$45.75** | **94%** |
-
-**Compaction triggers:**
-- Every ~50 messages
-- Uses Haiku (cheaper model) for summarization
-- ~5K output tokens per compaction = $0.075
-
-**Net benefit:** Massive savings despite compaction costs.
-
-**With prompt cache:** Additional 78% savings on cache reads.
-
-See [Context Management](./04-context-management.md#token-economics) for detailed analysis.
-
-### What's the cache hit rate in production?
-
-**Typical cache performance:**
-
-| Metric | Value |
-|--------|-------|
-| Cache hit rate | 85-95% |
-| Cache write cost | $3.75/Mtok |
-| Cache read cost | $0.30/Mtok (92% discount) |
-| Break-even point | 2 requests (cache + 1 read) |
-
-**Example session (10 requests):**
-
-```
-Request 1: Write cache (10K tokens) = $0.0375
-Requests 2-10: Read cache (9 × 10K × $0.30/Mtok) = $0.027
-
-Total: $0.0645
-Without cache: 10 × 10K × $3.75/Mtok = $0.375
-Savings: 83%
-```
-
-**Cache invalidation:**
-- Expires after 5 minutes of inactivity
-- Cleared on model change
-- Cleared on system prompt change
-
-See [Competitive Advantages](./01-competitive-advantages.md#3-prompt-cache-fork-optimization) for fork pattern.
-
-### How do I optimize for my workflow?
-
-**Profile your usage:**
-```bash
-/debug              # Show performance metrics
-/cost --breakdown   # Show cost by tool/agent
-```
-
-**Optimization strategies:**
-
-**For read-heavy workflows (exploration):**
-- Use Explore agent (`/explore` or Task tool with `subagent_type=Explore`)
-- 3x faster, 3x cheaper than general-purpose
-
-**For multi-agent tasks:**
-- Ensure cache fork pattern is working
-- Check cache hit rate with `/cost --cache`
-
-**For long conversations:**
-- Let autocompaction work (don't manually `/clear` too often)
-- Use `/remember` for critical context to survive compaction
-
-**For fast iteration:**
-- Use `--permissions=allow` or `bypass` to reduce prompts
-- Disable unused MCP servers
-
-**For cost control:**
-- Use Haiku model for simple tasks (`/model haiku`)
-- Set `--max-tokens` limit for responses
-- Use Explore agent for codebase navigation
-
-See [Production Engineering](./09-production-engineering.md#cost-optimization) for fleet-scale patterns.
-
----
-
-## Troubleshooting
-
-### Why does Claude ignore my CLAUDE.md instructions?
-
-**Common reasons:**
-
-1. **File not in project root**
-   - Must be exactly `CLAUDE.md` in `$(pwd)`
-   - Check: `ls CLAUDE.md` should show the file
-
-2. **Claude hasn't read it yet**
-   - Solution: "Read CLAUDE.md first, then help with X"
-   - Or: Add to system prompt via `/config`
-
-3. **Instructions too vague**
-   - Bad: "Use good coding practices"
-   - Good: "Always use TypeScript strict mode, prefer functional components"
-
-4. **Conflicting with model's training**
-   - Model may override if instructions contradict best practices
-   - Solution: Be explicit about project-specific patterns
-
-**Debug CLAUDE.md:**
-```bash
-/ask "What's in CLAUDE.md?"
-# If Claude can't answer, it hasn't read the file
-```
-
-See [Best Practices](https://code.claude.com/docs/en/best-practices) for example CLAUDE.md files.
-
-### What happens when tool execution fails mid-stream?
-
-**Claude Code handles failures gracefully:**
-
-1. **Error detected** during tool execution
-2. **Cancel dependent tools** that rely on failed tool
-3. **Report error to LLM** as tool result
-4. **Continue streaming** (don't crash entire conversation)
+1. **Detect** error during tool execution
+2. **Cancel** dependent tools that need failed tool's output
+3. **Report** error to LLM as tool result message
+4. **Continue** streaming (don't crash conversation)
 5. **LLM adapts** based on error message
 
-**Example:**
-```
-User: "Fix TypeScript errors in src/"
-[LLM streams]
-  Tool 1: Bash(npm run typecheck) → ERROR "npm not found"
-  Tool 2: FileEdit(main.ts) → CANCELLED (depends on Tool 1)
-[LLM sees error]
-  "I see npm isn't installed. Would you like to install dependencies first?"
-```
+**Retry logic for transient errors:**
+- Network timeouts (ECONNRESET, ETIMEDOUT)
+- Server errors (503, 429)
+- Exponential backoff: 1s, 2s, 4s
 
-**Retry logic:**
-- Transient errors (network timeout, 503): Auto-retry 3x
-- Logic errors (file not found, syntax error): Report immediately
+**No retry for logic errors:**
+- File not found
+- Syntax errors
+- Permission denied
 
 See [Streaming Execution](./03-streaming-execution.md#error-recovery) for implementation.
 
-### How do I recover from permission errors?
+---
 
-**Permission error scenarios:**
+## Context Management
 
-1. **Command blocked by security**
-   ```bash
-   # Detected dangerous command
-   $ rm -rf ../../../
-   ❌ BLOCKED: Path traversal outside project
-   ```
+### How does the 5-layer autocompaction work?
 
-   **Solution:** Use safer alternative or adjust permissions
-   ```bash
-   /permissions allow  # Allow this session
-   /permissions bypass # Allow all (dangerous)
-   ```
+**Progressive compaction pipeline:**
 
-2. **File write permission denied**
-   ```bash
-   ❌ ERROR: EACCES /etc/hosts
-   ```
+```
+Layer 1 (50 msgs):   Keep all → 50K tokens
+Layer 2 (100 msgs):  Recent 25 + Compact(25→5) → 30K tokens
+Layer 3 (200 msgs):  Recent 25 + Mid(25→5) + Old(50→5) → 35K tokens
+Layer 4 (400 msgs):  Recent 25 + 3 layers(175→15) → 40K tokens
+Layer 5 (500+ msgs): Recent 25 + 4 layers(375→20) → 45K tokens
+```
 
-   **Solution:** Fix file permissions
-   ```bash
-   sudo chown $USER /path/to/file
-   # Or: Run Claude Code with appropriate permissions
-   ```
+**Result:** Unlimited conversation without hitting 200K token limit.
 
-3. **MCP tool requires auth**
-   ```bash
-   ❌ ERROR: Database connection failed
-   ```
+**Implementation:**
+1. **Monitor** token count per request
+2. **Trigger** compaction at thresholds (50, 100, 200, 400 msgs)
+3. **Split** into recent (keep) vs older (compact)
+4. **Summarize** older messages with LLM (Haiku model)
+5. **Replace** older messages with summary boundary marker
 
-   **Solution:** Set environment variables
-   ```bash
-   export DATABASE_URL=postgres://...
-   claude
-   ```
+See [Context Management](./04-context-management.md#2-compaction-trigger) for code.
 
-See [Security Model](./07-security-model.md#4-permission-modes) for permission system details.
+### What gets preserved during compaction?
 
-### Why are my MCP servers not loading?
+**Compaction prompt preserves:**
+- File paths and names (exact strings)
+- Function/class/variable names
+- Technical decisions and rationale
+- Error messages and solutions
+- Configuration values
+- Open tasks and TODOs
 
-**Diagnostic steps:**
+**Compaction removes:**
+- Verbose explanations
+- Intermediate reasoning
+- Repeated information
+- Pleasantries and confirmations
 
-1. **Check MCP configuration**
-   ```bash
-   /mcp-list
-   # Should show all configured servers
-   ```
+**Quality metrics:**
+- Compression ratio: ~80% (e.g., 25 messages → 5K tokens)
+- Keywords preserved: 85-90%
+- File paths preserved: 95%+
 
-2. **Verify server installation**
-   ```bash
-   npm list -g @modelcontextprotocol/server-*
-   ```
+See [Context Management](./04-context-management.md#semantic-preservation) for prompt engineering.
 
-3. **Check server logs**
-   ```bash
-   export MCP_DEBUG=1
-   claude
-   # Watch logs in another terminal:
-   tail -f ~/.claude/logs/mcp-debug.log
-   ```
+### How much does autocompaction cost?
 
-4. **Test server independently**
-   ```bash
-   npx @modelcontextprotocol/server-postgres
-   # Should start without errors
-   ```
+**Cost analysis for 500-message conversation:**
 
-**Common fixes:**
+| Approach | Input Cost | Compaction Cost | Total |
+|----------|-----------|----------------|-------|
+| No compaction | $300 (500K tokens/req) | $0 | $300 |
+| With compaction | $45 (30K tokens/req) | $0.75 (10 compactions) | $45.75 |
 
-| Issue | Fix |
-|-------|-----|
-| Server not installed | `npm install -g @modelcontextprotocol/server-*` |
-| Wrong Node version | Update to Node.js 18+ |
-| Missing environment vars | Set `DATABASE_URL`, `API_KEY`, etc. |
-| Server crashes on start | Check server-specific requirements |
-| Permission denied | Run with appropriate user permissions |
+**Savings: 85%**
 
-See [Integration Ecosystem](./08-integration-ecosystem.md#mcp-client) for MCP architecture.
+**Compaction costs:**
+- Frequency: Every ~50 messages
+- Model: Haiku (cheaper for summarization)
+- Output: ~5K tokens × $15/Mtok = $0.075 per compaction
+
+**With prompt cache:** Additional 78% savings on repeated context.
+
+See [Context Management](./04-context-management.md#token-economics) for breakdown.
 
 ---
 
-## Security & Permissions
+## Multi-Agent System
 
-### How does the AST-based bash security work?
+### What are the 6 specialized agent types?
 
-**Traditional security (regex):**
-```bash
-# Regex pattern: ^rm -rf
-rm -rf ./temp          ✅ Allowed (doesn't match)
-rm -rf "$(pwd)/../.."  ✅ Allowed (regex misses complexity)
-```
+**Agent specialization reduces cost and improves speed:**
 
-**Claude Code (AST parsing):**
-```bash
-# Parse command into syntax tree
-rm -rf "$(pwd)/../.."
-  ├─ Command: rm
-  ├─ Flags: [-rf]
-  └─ Argument: CommandSubstitution
-       ├─ Command: pwd
-       └─ PathTraversal: ../..
+| Agent | Tools | Use Case | Efficiency |
+|-------|-------|----------|-----------|
+| **general-purpose** | All 40 tools | Complex multi-step tasks | Baseline |
+| **Explore** | 8 read-only (Glob, Grep, Read) | Fast codebase search | 3x cheaper, 3x faster |
+| **Plan** | Planning tools (no Edit/Write) | Implementation planning | 2x faster |
+| **Bash** | Bash only | Command execution | 10x cheaper |
+| **statusline-setup** | Read, Edit | Config file editing | Specialized prompts |
+| **claude-code-guide** | Read-only + Web | Documentation Q&A | Knowledge expert |
 
-Risk: HIGH (destructive command + path escape)
-Action: ❌ BLOCK
-```
+**Example task:** "Find all API endpoints"
+- General-purpose: $0.15, 45s (40 tools in prompt)
+- Explore agent: $0.05, 15s (8 tools in prompt)
 
-**Benefits:**
-- Detects obfuscated commands
-- Understands command substitution
-- Analyzes pipe chains
-- Catches path traversal
+See [Multi-Agent Orchestration](./05-multi-agent-orchestration.md#1-agent-definition) for definitions.
 
-See [Security Model](./07-security-model.md#ast-level-bash-parsing) for implementation.
-
-### What are the 4 permission modes?
-
-| Mode | Behavior | Use Case |
-|------|----------|----------|
-| **Ask** | Prompt for every tool | Learning, careful work |
-| **Allow** | Auto-allow safe tools, ask for risky | Balanced workflow |
-| **Bypass** | Allow everything | Rapid prototyping (risky) |
-| **Deny** | Block all tools | Read-only exploration |
-
-**Set permission mode:**
-```bash
-/permissions ask     # Default: ask for everything
-/permissions allow   # Auto-allow safe operations
-/permissions bypass  # Allow all (DANGEROUS)
-/permissions deny    # Block all modifications
-```
-
-**Tool risk levels:**
-- **Safe:** FileRead, Grep, Glob (read-only)
-- **Medium:** FileEdit, FileWrite (file modifications)
-- **High:** Bash with destructive commands (rm, dd, etc.)
-
-See [Security Model](./07-security-model.md#4-permission-modes) for risk assessment.
-
-### How do I audit what agents did in a conversation?
-
-**View conversation transcript:**
-```bash
-/save conversation.jsonl    # Save full conversation
-```
-
-**Parse tool usage:**
-```bash
-# Extract tool calls from transcript
-cat conversation.jsonl | jq 'select(.type=="tool_use") | {tool: .name, input: .input}'
-```
-
-**Session recording (enterprise):**
-```json
-// MDM policy
-{
-  "sessionRecording": true,
-  "recordingPath": "/var/log/claude-sessions/",
-  "includeToolResults": true
-}
-```
-
-**Built-in audit log:**
-```bash
-/debug --show-tools     # Show all tools used this session
-/cost --by-tool         # Show cost breakdown by tool
-```
-
-See [Production Engineering](./09-production-engineering.md#fleet-management-features) for enterprise audit features.
-
-### Can I prevent specific commands from running?
-
-**Yes, via permission hooks or MDM policies:**
-
-**Permission hook (`.claude/hooks/pre-bash.sh`):**
-```bash
-#!/bin/bash
-# Block specific commands
-
-if echo "$1" | grep -q "npm publish"; then
-  echo "❌ BLOCKED: npm publish not allowed"
-  exit 1
-fi
-
-# Allow other commands
-exit 0
-```
-
-**MDM policy (enterprise):**
-```json
-{
-  "blockedCommands": [
-    "npm publish",
-    "git push --force",
-    "rm -rf /",
-    "dd if=/dev/zero"
-  ],
-  "allowedDomains": ["company.com", "github.com"],
-  "maxFileSize": "10MB"
-}
-```
-
-**Tool-specific restrictions:**
-```bash
-/config set tools.Bash.enabled false    # Disable Bash entirely
-/config set tools.FileWrite.readonly true # Block file writes
-```
-
-See [Security Model](./07-security-model.md#mdm-policy-enforcement) for enterprise policies.
-
----
-
-## Advanced Topics
-
-### How do specialized agents work?
-
-**6 specialized agent types:**
-
-| Agent | Tools Available | Use Case | Model |
-|-------|----------------|----------|-------|
-| **general-purpose** | All 40 tools | Complex multi-step tasks | Sonnet |
-| **Explore** | Glob, Grep, Read, WebFetch, WebSearch | Fast codebase navigation | Haiku |
-| **Plan** | Glob, Grep, Read, Task, AskUserQuestion | Implementation planning | Sonnet |
-| **Bash** | Bash only | Command execution | Haiku |
-| **statusline-setup** | Read, Edit | Config file editing | Haiku |
-| **claude-code-guide** | Glob, Grep, Read, WebFetch, WebSearch | Documentation Q&A | Haiku |
-
-**Performance comparison:**
-
-```typescript
-// Task: "Find all API endpoints"
-
-// General-purpose agent (slow)
-Tools: [Glob, Grep, Read, FileEdit, Bash, ...]  // 40 tools
-Tokens: 50K (all tool definitions)
-Cost: $0.15
-Time: 45s
-
-// Explore agent (fast)
-Tools: [Glob, Grep, Read, WebFetch, WebSearch]  // 8 tools
-Tokens: 15K (fewer tool definitions)
-Cost: $0.05
-Time: 15s
-
-Speedup: 3x faster, 3x cheaper
-```
-
-See [Competitive Advantages](./01-competitive-advantages.md#7-6-specialized-agents) for details.
-
-### What's the cache fork optimization?
+### How does the cache fork pattern work?
 
 **Problem:** Multiple agents creating duplicate caches
 
-**Without fork pattern:**
+**Without fork:**
 ```typescript
-Agent 1: Create cache (base context) = $0.0375
-Agent 2: Create cache (base context) = $0.0375  // DUPLICATE
-Agent 3: Create cache (base context) = $0.0375  // DUPLICATE
+Agent 1: Create cache (10K tokens) = $0.0375
+Agent 2: Create cache (10K tokens) = $0.0375  // DUPLICATE
+Agent 3: Create cache (10K tokens) = $0.0375  // DUPLICATE
 Total: $0.1125
 ```
 
 **With fork pattern:**
 ```typescript
 // 1. Create base cache once
-Base context → Cache (10K tokens) = $0.0375
+Base context → Cache = $0.0375
 
 // 2. All agents read from cache
-Agent 1: Read cache + new task = $0.003
-Agent 2: Read cache + new task = $0.003
-Agent 3: Read cache + new task = $0.003
-
+Agent 1: Read cache + task = $0.003
+Agent 2: Read cache + task = $0.003
+Agent 3: Read cache + task = $0.003
 Total: $0.0465 (59% savings)
 ```
 
@@ -957,41 +313,450 @@ const cachedBase = baseContext.map((msg, i) => ({
     : undefined
 }))
 
-// Spawn agent with cached prefix
-const agent = createAgent({
-  messages: [
-    ...cachedBase,  // Will be cache-read
-    { role: 'user', content: newTask }
-  ]
+// Spawn agent inheriting cache
+createAgent({
+  messages: [...cachedBase, { role: 'user', content: task }]
 })
 ```
 
-See [Competitive Advantages](./01-competitive-advantages.md#3-prompt-cache-fork-optimization) for economics.
+See [Multi-Agent Orchestration](./05-multi-agent-orchestration.md#3-cache-fork-pattern) for economics.
 
-### How does dead code elimination work with feature flags?
+### How do agents coordinate in parallel workflows?
 
-**Build-time feature flags remove unused code:**
+**Coordinator mode architecture:**
 
 ```typescript
-// src/features.ts
-import { feature } from 'bun:bundle'
+// Parent agent spawns multiple child agents
+const agents = await Promise.all([
+  createAgent({ task: 'Research topic A' }),
+  createAgent({ task: 'Research topic B' }),
+  createAgent({ task: 'Research topic C' }),
+])
 
-if (feature('VOICE_MODE')) {
-  // This code is REMOVED from bundle if VOICE_MODE=false
-  import('./voice/voiceMode.js')
-  setupVoiceMode()
+// All share cached parent context (fork pattern)
+// Results merged by parent agent
+```
+
+**Benefits:**
+- **Parallel execution** - 3 tasks in time of 1
+- **Shared cache** - 90% cost reduction
+- **Independent failures** - One error doesn't crash all
+- **Inter-agent messaging** - Agents can communicate
+
+**Use cases:**
+- Research multiple topics simultaneously
+- Parallel code exploration
+- Distributed testing
+- Concurrent file processing
+
+See [Multi-Agent Orchestration](./05-multi-agent-orchestration.md#4-coordinator-mode) for patterns.
+
+---
+
+## Terminal UI
+
+### How is the React terminal UI architected?
+
+**Component hierarchy:**
+
+```
+<App>
+  ├─ <MessageList>
+  │   ├─ <UserMessage>
+  │   ├─ <AssistantMessage>
+  │   │   ├─ <ToolUseMessage>
+  │   │   │   └─ <ToolSpecificUI>
+  │   │   └─ <ToolResultMessage>
+  │   └─ <SystemMessage>
+  ├─ <InputArea>
+  │   ├─ <VimModeInput>
+  │   └─ <CommandPalette>
+  ├─ <StatusBar>
+  │   ├─ <TokenCounter>
+  │   ├─ <CostDisplay>
+  │   └─ <ModelIndicator>
+  └─ <ProgressIndicators>
+```
+
+**State management:**
+```typescript
+type AppState = DeepImmutable<{
+  messages: Message[]
+  currentModel: ModelSetting
+  permissions: PermissionRules
+  activeTools: ToolExecution[]
+  tokenUsage: TokenUsage
+  settings: SettingsJson
+}>
+```
+
+**80+ components** organized by feature area.
+
+See [Terminal UX](./06-terminal-ux.md#2-component-architecture) for details.
+
+### How are tool results rendered?
+
+**Each tool provides custom rendering:**
+
+```typescript
+interface Tool {
+  // Render tool invocation
+  renderToolUseMessage(input, options): JSX.Element
+
+  // Render tool result
+  renderToolResultMessage(content, progress, options): JSX.Element
+}
+```
+
+**Example: BashTool**
+```tsx
+renderToolUseMessage(input) {
+  return (
+    <Box>
+      <Text color="cyan">$ {input.command}</Text>
+    </Box>
+  )
 }
 
-if (feature('ENTERPRISE_SSO')) {
-  // This code only in enterprise builds
-  import('./enterprise/sso.js')
-  setupSSOProvider()
+renderToolResultMessage(content, progress) {
+  return (
+    <Box flexDirection="column">
+      <Text>{content.stdout}</Text>
+      {content.stderr && <Text color="red">{content.stderr}</Text>}
+      <Text color="gray">Exit code: {content.exitCode}</Text>
+    </Box>
+  )
+}
+```
+
+**Benefits:**
+- Tool-specific formatting (code highlighting, tables, etc.)
+- Progress indicators during execution
+- Error state visualization
+
+See [Terminal UX](./06-terminal-ux.md#5-tool-rendering-system) for rendering system.
+
+### How does the command palette work?
+
+**Fuzzy search architecture:**
+
+```typescript
+// 85+ slash commands registered
+const commands = [
+  { name: 'commit', category: 'git', description: '...' },
+  { name: 'review-pr', category: 'git', description: '...' },
+  // ... 83 more
+]
+
+// Fuzzy matching with fuse.js
+const fuse = new Fuse(commands, {
+  keys: ['name', 'description', 'category'],
+  threshold: 0.3,
+})
+
+// User types "/com"
+const results = fuse.search('/com')
+// → [commit, compact, config, ...]
+```
+
+**UI:**
+- Triggered by `/` key
+- Live search as user types
+- Keyboard navigation (↑↓ arrows)
+- Categories and descriptions
+- Conditional visibility (feature flags)
+
+See [Terminal UX](./06-terminal-ux.md#4-command-palette) for implementation.
+
+---
+
+## Security & Permissions
+
+### How does AST-based Bash parsing work?
+
+**Traditional security (regex):**
+```bash
+rm -rf ./temp          ✅ Allowed
+rm -rf "$(pwd)/../.."  ✅ Allowed (regex can't detect)
+```
+
+**Claude Code (AST parsing):**
+```typescript
+// Parse into Abstract Syntax Tree
+const ast = bashParser('rm -rf "$(pwd)/../.."')
+
+// AST structure:
+{
+  command: 'rm',
+  flags: ['-rf'],
+  arguments: [{
+    type: 'CommandSubstitution',
+    command: 'pwd',
+    pathTraversal: '../..'  // DETECTED
+  }]
+}
+
+// Risk analysis
+analyzeRisk(ast)
+// → HIGH: Destructive command + path escape
+// → BLOCK
+```
+
+**Catches:**
+- Command substitution `$()`
+- Path traversal `../../../`
+- Pipe chains
+- Redirects to sensitive files
+- Obfuscated commands
+
+See [Security Model](./07-security-model.md#1-ast-level-bash-parsing) for parser.
+
+### What are the 4 permission modes?
+
+**Permission modes control tool execution:**
+
+| Mode | Behavior | Use Case |
+|------|----------|----------|
+| **Ask** | Prompt for every tool | Careful work, learning |
+| **Allow** | Auto-allow safe tools | Balanced workflow |
+| **Bypass** | Allow everything | Rapid prototyping (risky) |
+| **Deny** | Block all tools | Read-only exploration |
+
+**Permission check flow:**
+```typescript
+async function executeTool(tool, input) {
+  // 1. Check permission mode
+  const mode = getPermissionMode()
+
+  // 2. Analyze tool safety
+  const risk = await tool.checkPermissions(input)
+
+  // 3. Decide action
+  if (mode === 'bypass') return tool.call(input)
+  if (mode === 'deny') throw new Error('Blocked')
+  if (mode === 'allow' && risk === 'low') return tool.call(input)
+
+  // 4. Ask user
+  const approved = await askUser(`Allow ${tool.name}?`)
+  if (approved) return tool.call(input)
+  throw new Error('User denied')
+}
+```
+
+See [Security Model](./07-security-model.md#4-permission-modes) for implementation.
+
+### How are dangerous commands detected?
+
+**Risk assessment factors:**
+
+```typescript
+function assessRisk(command: CommandAST): RiskLevel {
+  let risk = 'LOW'
+
+  // Destructive commands
+  if (command.name in ['rm', 'dd', 'mkfs']) {
+    risk = 'HIGH'
+  }
+
+  // Dangerous flags
+  if (command.flags.includes('-rf')) {
+    risk = 'HIGH'
+  }
+
+  // Path escape
+  if (command.args.some(arg => arg.includes('..'))) {
+    risk = 'HIGH'
+  }
+
+  // Network access
+  if (command.name in ['curl', 'wget', 'nc']) {
+    risk = 'MEDIUM'
+  }
+
+  // Sensitive files
+  if (command.redirects.some(r => r.file.includes('/etc/'))) {
+    risk = 'HIGH'
+  }
+
+  return risk
+}
+```
+
+**Blocked patterns:**
+- `rm -rf` with path traversal
+- `dd` to block devices
+- `curl` with POST to unknown domains
+- Writes to `/etc/`, `/sys/`, `/proc/`
+- Command injection attempts
+
+See [Security Model](./07-security-model.md#3-risk-assessment) for heuristics.
+
+---
+
+## Integration Ecosystem
+
+### How does dual-role MCP work?
+
+**Claude Code acts as both MCP client and server:**
+
+**As MCP Client:**
+```typescript
+// Connect to external MCP servers
+const mcpClient = new MCPClient({
+  command: 'npx',
+  args: ['-y', '@modelcontextprotocol/server-postgres'],
+  env: { DATABASE_URL: 'postgres://...' },
+})
+
+await mcpClient.connect()
+const tools = await mcpClient.listTools()
+// → Register as MCPTool instances
+// → LLM can now use database tools
+```
+
+**As MCP Server:**
+```typescript
+// Expose Claude Code tools to other apps
+const mcpServer = new MCPServer({
+  name: 'claude-code',
+  tools: [BashTool, FileReadTool, GrepTool],
+})
+
+// VS Code can now call Claude Code's Bash tool
+// Web apps can use FileRead/FileEdit
+```
+
+**Benefits:**
+- **Client:** Use external tools (databases, browsers, APIs)
+- **Server:** Share tools with other AI apps
+- **Bidirectional:** Both producer and consumer
+
+See [Integration Ecosystem](./08-integration-ecosystem.md#1-dual-role-mcp) for architecture.
+
+### What is the skill system?
+
+**Skills are reusable workflows:**
+
+```
+.claude/skills/my-skill/
+├── SKILL.md           # Documentation
+├── prompts/
+│   └── system.md      # Custom system prompt
+├── references/        # Reference docs
+│   └── api.md
+└── _meta.json         # Metadata
+```
+
+**Metadata (`_meta.json`):**
+```json
+{
+  "name": "my-skill",
+  "version": "1.0.0",
+  "description": "Custom workflow",
+  "allowedTools": ["FileRead", "Bash", "Grep"],
+  "requiredFeature": null  // Feature flag
+}
+```
+
+**Conditional loading:**
+```typescript
+// Skills only load if feature flag enabled
+if (feature('CUSTOM_SKILLS')) {
+  loadSkills('.claude/skills/')
+}
+```
+
+**85+ built-in skills** for common workflows.
+
+See [Integration Ecosystem](./08-integration-ecosystem.md#3-skill-system) for examples.
+
+### How does the IDE bridge work?
+
+**Bridge Mode architecture:**
+
+```
+Terminal (Claude Code)
+    ↓ Bridge API
+VS Code Extension
+    ↓ LSP
+VS Code UI
+```
+
+**Implementation:**
+```typescript
+// Claude Code in bridge mode
+startBridgeServer({
+  port: 3000,
+  endpoints: {
+    '/conversation': handleConversation,
+    '/tools': handleToolCall,
+    '/state': getState,
+  },
+})
+
+// VS Code extension connects
+const bridge = new BridgeClient('http://localhost:3000')
+const response = await bridge.sendMessage('Help me refactor this')
+```
+
+**Shared capabilities:**
+- Conversation state synced
+- Tools callable from either UI
+- File operations respect both contexts
+
+See [Integration Ecosystem](./08-integration-ecosystem.md#2-ide-bridges) for protocol.
+
+---
+
+## Performance & Optimization
+
+### How is startup time optimized?
+
+**Parallel prefetch pattern:**
+
+```typescript
+// Start all I/O operations in parallel
+const [mdm, keychain, apiStatus] = await Promise.all([
+  fetchMDMPolicy(),
+  loadKeychainToken(),
+  checkAPIStatus(),
+])
+
+// Lazy load heavy modules
+const { heavyModule } = await import('./heavy')
+```
+
+**Startup phases:**
+
+| Phase | Time | Optimization |
+|-------|------|-------------|
+| Prefetch | 0-100ms | Parallel I/O |
+| Module load | 100-300ms | Lazy imports |
+| Config load | 300-400ms | Zod validation |
+| OAuth check | 400-500ms | Cached tokens |
+| REPL init | 500-600ms | React render |
+| **Total** | **~600ms** | Fast for 512K LOC |
+
+See [Production Engineering](./09-production-engineering.md#1-startup-optimization) for patterns.
+
+### How do feature flags enable dead code elimination?
+
+**Build-time feature flags with Bun:**
+
+```typescript
+import { feature } from 'bun:bundle'
+
+// Dead code elimination
+if (feature('VOICE_MODE')) {
+  // This code REMOVED if VOICE_MODE=false at build time
+  import('./voice/voiceMode.js')
+  setupVoiceMode()
 }
 ```
 
 **Build commands:**
 ```bash
-# Consumer build (no enterprise features)
+# Consumer build (no enterprise)
 bun build --define 'feature("ENTERPRISE_SSO")=false'
 # Result: 28MB bundle
 
@@ -1001,251 +766,323 @@ bun build --define 'feature("ENTERPRISE_SSO")=true'
 ```
 
 **Benefits:**
-- **37% smaller** consumer bundles
-- **Faster startup** (less code to parse)
-- **Better security** (enterprise code not exposed)
-- **Type-safe** (compiler checks feature flags)
+- 37% smaller consumer bundles
+- Faster startup (less code to parse)
+- Better security (enterprise code not exposed)
+- Type-safe (compiler checks flags)
 
-See [Competitive Advantages](./01-competitive-advantages.md#8-feature-flag-dead-code-elimination) for details.
+See [Production Engineering](./09-production-engineering.md#2-feature-flag-optimization) for implementation.
 
-### How do I build custom React components for terminal UI?
+### What's the cache hit rate in production?
 
-**Claude Code uses React + Ink:**
+**Typical cache performance:**
 
-```tsx
-// .claude/components/CustomProgress.tsx
-import { Box, Text } from 'ink'
-import Spinner from 'ink-spinner'
+| Metric | Value |
+|--------|-------|
+| Cache hit rate | 85-95% |
+| Break-even point | 2 requests |
+| Cache TTL | 5 minutes |
 
-interface Props {
-  status: 'pending' | 'running' | 'complete'
-  message: string
-  percent?: number
-}
+**Cost comparison (10 requests):**
 
-export function CustomProgress({ status, message, percent }: Props) {
-  return (
-    <Box flexDirection="column">
-      <Box>
-        {status === 'running' && <Spinner type="dots" />}
-        {status === 'complete' && <Text color="green">✓</Text>}
-        {status === 'pending' && <Text color="gray">○</Text>}
-        <Text> {message}</Text>
-      </Box>
+```
+Without cache:
+10 × 10K tokens × $3.75/Mtok = $0.375
 
-      {percent !== undefined && (
-        <Box marginLeft={2}>
-          <Text color="cyan">
-            {'█'.repeat(Math.floor(percent / 5))}
-            {'░'.repeat(20 - Math.floor(percent / 5))}
-            {' '}{percent}%
-          </Text>
-        </Box>
-      )}
-    </Box>
-  )
-}
+With cache:
+Request 1: Write 10K × $3.75/Mtok = $0.0375 (cache write)
+Requests 2-10: Read 9×10K × $0.30/Mtok = $0.027 (cache read)
+Total: $0.0645
+
+Savings: 83%
 ```
 
-**Use in tool:**
-```typescript
-// .claude/tools/MyTool.tsx
-import { CustomProgress } from '../components/CustomProgress'
+**Cache invalidation:**
+- Expires after 5 min inactivity
+- Cleared on model change
+- Cleared on system prompt change
 
-export const MyTool = buildTool({
-  renderToolUseMessage(input, options) {
-    return <CustomProgress status="running" message="Processing..." />
-  }
-})
-```
-
-See [Terminal UX](./06-terminal-ux.md) for component architecture.
+See [Production Engineering](./09-production-engineering.md#3-prompt-cache-economics) for analysis.
 
 ---
 
-## Enterprise & Fleet Management
+## Implementation Patterns
 
-### How do I deploy Claude Code to a team?
+### How is tool isolation achieved?
 
-**MDM-based deployment (recommended):**
+**Each tool is self-contained:**
 
-1. **Create MDM policy:**
-   ```json
-   // /etc/claude/policy.json
-   {
-     "allowedTools": ["FileRead", "Grep", "Glob", "Bash"],
-     "blockedCommands": ["npm publish", "git push --force"],
-     "maxTokensPerRequest": 50000,
-     "allowedDomains": ["company.com", "github.com"],
-     "sessionRecording": true,
-     "recordingPath": "/var/log/claude-sessions/",
-     "requiredAuth": true,
-     "licenseKey": "enterprise-key-..."
-   }
-   ```
+```
+src/tools/BashTool/
+├── BashTool.tsx                 # Main implementation
+├── UI.tsx                       # Tool use rendering
+├── BashToolResultMessage.tsx    # Result rendering
+├── bashPermissions.ts           # Permission logic
+├── bashSecurity.ts              # Security validation
+├── ast.js                       # AST parsing
+├── sandbox/                     # Sandboxing
+└── __tests__/                   # Unit tests
+```
 
-2. **Deploy via package manager:**
-   ```bash
-   # Homebrew (macOS)
-   brew install --cask claude-code
-
-   # Chocolatey (Windows)
-   choco install claude-code
-
-   # APT (Linux)
-   sudo apt install claude-code
-   ```
-
-3. **Configure via env vars:**
-   ```bash
-   # /etc/environment
-   ANTHROPIC_API_KEY=sk-ant-...
-   CLAUDE_MDM_POLICY=/etc/claude/policy.json
-   CLAUDE_SESSION_RECORDING=1
-   ```
-
-See [Production Engineering](./09-production-engineering.md#fleet-management) for patterns.
-
-### What metrics should I monitor?
-
-**Key metrics for fleet management:**
-
+**Tool interface:**
 ```typescript
-interface FleetMetrics {
-  // Usage
-  activeUsers: number
-  sessionsPerDay: number
-  avgSessionLength: number
+interface Tool {
+  name: string
+  description: string
+  inputSchema: ZodSchema
 
-  // Cost
-  tokensPerDay: number
-  costPerUser: number
-  cacheHitRate: number
-
-  // Performance
-  avgResponseTime: number
-  errorRate: number
-  toolFailureRate: number
+  // Execution
+  call(input, context): Promise<any>
 
   // Security
-  blockedCommands: number
-  permissionViolations: number
-  suspiciousActivity: number
+  checkPermissions(input, context): Promise<PermissionResult>
+
+  // Optimization
+  isConcurrencySafe(input): boolean
+  isReadOnly(input): boolean
+
+  // UI
+  renderToolUseMessage(input): JSX.Element
+  renderToolResultMessage(content): JSX.Element
 }
 ```
 
-**Monitoring dashboard:**
-```bash
-# View fleet metrics
-claude-admin metrics --team=engineering
+**Benefits:**
+- No dependencies between tools
+- Easy to test in isolation
+- Can be disabled/enabled independently
+- Custom UI per tool
 
-# Sample output:
-Active users:        147
-Sessions/day:        523
-Tokens/day:          12.5M
-Cost/day:            $37.50
-Cache hit rate:      89%
-Avg response time:   1.2s
-Error rate:          0.3%
+See [Architecture Overview](./02-architecture-overview.md#3-tool-system) for tool categories.
+
+### How is immutable state managed?
+
+**DeepImmutable type enforcement:**
+
+```typescript
+type AppState = DeepImmutable<{
+  messages: Message[]
+  settings: Settings
+}>
+
+// Cannot mutate:
+// state.messages.push(msg) // TypeScript error
+
+// Must create new state:
+const newState = {
+  ...state,
+  messages: [...state.messages, msg],
+}
 ```
 
-See [Production Engineering](./09-production-engineering.md#observability) for OpenTelemetry integration.
+**Benefits:**
+- No accidental mutations
+- Easier debugging (state snapshots)
+- Better performance (reference equality checks)
+- Undo/redo support
 
-### How do I handle cost overruns?
-
-**Cost control strategies:**
-
-1. **Set token budgets:**
-   ```json
-   // MDM policy
-   {
-     "maxTokensPerRequest": 50000,
-     "maxTokensPerUser": 1000000,  // 1M tokens/month
-     "maxCostPerUser": 30.00        // $30/month
-   }
-   ```
-
-2. **Use cheaper models:**
-   ```bash
-   /model haiku               # Switch to Haiku (90% cheaper)
-   /config set defaultModel haiku
-   ```
-
-3. **Optimize agent usage:**
-   - Use specialized agents (Explore, Bash) instead of general-purpose
-   - Ensure cache fork pattern is working
-   - Monitor cache hit rate
-
-4. **Alert on overruns:**
-   ```typescript
-   // Cost monitoring webhook
-   if (userCostThisMonth > budgetLimit) {
-     sendAlert({
-       user: user.email,
-       cost: userCostThisMonth,
-       limit: budgetLimit,
-       action: 'rate_limit_enabled'
-     })
-   }
-   ```
-
-See [Competitive Advantages](./01-competitive-advantages.md#10-fleet-scale-economics) for cost optimization patterns.
-
-### What's the SLA for enterprise deployments?
-
-**Anthropic enterprise SLA (typical):**
-
-- **Uptime:** 99.9% (API availability)
-- **Latency:** p50 < 500ms, p99 < 2s
-- **Support:** 24/7 enterprise support
-- **Rate limits:** Custom limits for enterprise
-- **Security:** SOC 2 Type II, ISO 27001
-- **Data residency:** Regional deployment options
-
-**Claude Code-specific:**
-
-- **Update frequency:** Monthly releases
-- **Security patches:** Within 48h of disclosure
-- **Breaking changes:** 90-day deprecation notice
-- **Feature flags:** Gradual rollout for enterprise
-
-**Monitoring:**
-```bash
-# Check Claude Code health
-claude-admin health
-
-# Sample output:
-API Status:          ✓ Operational
-Cache Service:       ✓ Operational
-MCP Servers:         ✓ All connected (5/5)
-Telemetry:           ✓ Operational
-Last updated:        2026-04-02 10:23:45 UTC
+**State updates:**
+```typescript
+// Reducer pattern
+function reducer(state: AppState, action: Action): AppState {
+  switch (action.type) {
+    case 'ADD_MESSAGE':
+      return {
+        ...state,
+        messages: [...state.messages, action.message],
+      }
+    case 'UPDATE_SETTINGS':
+      return {
+        ...state,
+        settings: { ...state.settings, ...action.updates },
+      }
+  }
+}
 ```
 
-See [Anthropic Enterprise](https://www.anthropic.com/enterprise) for official SLA details.
+See [Architecture Overview](./02-architecture-overview.md#3-immutability) for principles.
+
+### How does error recovery work?
+
+**Comprehensive error categorization:**
+
+```typescript
+// src/services/api/errors.ts
+type ErrorCategory =
+  | 'network'      // ECONNRESET, timeout
+  | 'auth'         // 401, invalid key
+  | 'rate_limit'   // 429, too many requests
+  | 'server'       // 500, 503
+  | 'validation'   // 400, invalid input
+  | 'unknown'
+
+function categorizeError(error: Error): ErrorCategory {
+  if (error.message.includes('ECONNRESET')) return 'network'
+  if (error.message.includes('401')) return 'auth'
+  if (error.message.includes('429')) return 'rate_limit'
+  // ...
+}
+```
+
+**Retry logic:**
+```typescript
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  maxRetries = 3
+): Promise<T> {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn()
+    } catch (error) {
+      const category = categorizeError(error)
+
+      // Retry transient errors
+      if (category in ['network', 'rate_limit', 'server']) {
+        const delay = Math.min(1000 * Math.pow(2, i), 10000)
+        await sleep(delay)
+        continue
+      }
+
+      // Don't retry logic errors
+      throw error
+    }
+  }
+}
+```
+
+See [Production Engineering](./09-production-engineering.md#4-error-handling) for patterns.
+
+---
+
+## Applying These Patterns
+
+### Can I use streaming execution in my AI tool?
+
+**Yes, if you have control over the streaming protocol:**
+
+**Requirements:**
+1. Access to raw SSE stream from LLM API
+2. Ability to parse partial tool calls
+3. State management for concurrent operations
+
+**Key implementation:**
+```typescript
+async function* streamWithTools(response) {
+  const pendingTools = new Map()
+
+  for await (const chunk of parseSSE(response)) {
+    if (chunk.type === 'tool_use') {
+      // Start tool immediately
+      const promise = executeTool(chunk)
+      pendingTools.set(chunk.id, promise)
+    }
+
+    if (chunk.type === 'text') {
+      yield chunk.text
+    }
+  }
+
+  // Wait for all tools
+  await Promise.all(pendingTools.values())
+}
+```
+
+**Challenges:**
+- Handling partial JSON in streaming parameters
+- Race condition management
+- Error recovery mid-stream
+
+See [Streaming Execution](./03-streaming-execution.md#implementation-challenges) for details.
+
+### Can I implement autocompaction for my chatbot?
+
+**Yes, the pattern is reusable:**
+
+**Implementation steps:**
+1. **Monitor** token count per request
+2. **Trigger** compaction at threshold (e.g., 50K tokens)
+3. **Split** messages into recent (keep) vs old (compact)
+4. **Summarize** old messages with cheaper LLM
+5. **Replace** old messages with summary marker
+
+**Example:**
+```typescript
+async function compactIfNeeded(messages: Message[]) {
+  const tokens = estimateTokens(messages)
+
+  if (tokens < 50_000) return messages
+
+  // Keep recent 25 messages
+  const recent = messages.slice(-25)
+  const older = messages.slice(0, -25)
+
+  // Summarize older messages
+  const summary = await llm.summarize(older)
+
+  return [
+    { role: 'system', content: summary },
+    ...recent,
+  ]
+}
+```
+
+See [Context Management](./04-context-management.md#3-compaction-algorithm) for full algorithm.
+
+### How can I optimize for fleet-scale usage?
+
+**Key strategies from Claude Code:**
+
+1. **Prompt cache optimization**
+   - Share cached context across sessions
+   - Use fork pattern for multi-agent
+   - Cache boundary markers
+
+2. **Specialized agents**
+   - Create task-specific agents with fewer tools
+   - Use cheaper models where appropriate
+   - Reduce prompt size for simple tasks
+
+3. **Autocompaction**
+   - Prevent unbounded context growth
+   - Massive cost savings for long sessions
+
+4. **Dead code elimination**
+   - Build-time feature flags
+   - Smaller bundles for faster startup
+   - Remove unused enterprise features
+
+**Expected savings:**
+- Cache fork: 90% for multi-agent
+- Autocompaction: 85% for long conversations
+- Specialized agents: 3x for search/exploration
+- Feature flags: 37% smaller bundles
+
+See [Production Engineering](./09-production-engineering.md#fleet-scale-optimization) for patterns.
+
+### What are the key architectural takeaways?
+
+**10 lessons from Claude Code:**
+
+1. **Streaming beats waiting** - Execute tools concurrently while LLM streams
+2. **Context management is crucial** - Autocompaction enables unlimited conversations
+3. **Specialization wins** - Purpose-built agents are 3x more efficient
+4. **Cache aggressively** - Fork pattern saves 90% on multi-agent
+5. **React works in CLI** - Declarative UI is maintainable at scale
+6. **AST beats regex** - Deep parsing catches edge cases
+7. **Type safety matters** - Zod + TypeScript prevent runtime errors
+8. **Optimize for fleet** - Think Gtok/week, not per-request
+9. **Dead code elimination** - Feature flags reduce bundle size 37%
+10. **Immutability simplifies** - State snapshots enable debugging
+
+See [Lessons Learned](./10-lessons-learned.md) for complete insights.
 
 ---
 
 ## Sources & Further Reading
 
-This FAQ synthesizes information from:
+This FAQ is based on architectural analysis documented in:
 
-### Official Documentation
-- [Claude Code Best Practices](https://code.claude.com/docs/en/best-practices)
-- [Anthropic API Documentation](https://docs.anthropic.com)
-- [Model Context Protocol (MCP) Specification](https://modelcontextprotocol.io)
-
-### Educational Resources (2026)
-- [Claude Code CLI & Workflow Mastery: Interview Questions 2026](https://www.udemy.com/course/claude-code-cli-workflow-mastery-interview-questions-2026/)
-- [The Claude Code Handbook](https://www.freecodecamp.org/news/claude-code-handbook/)
-- [How I use Claude Code](https://www.builder.io/blog/claude-code)
-
-### Developer Community
-- [Claude Code: The Most Common Questions Beginners Ask](https://every.to/source-code/claude-code-the-most-common-questions-beginners-ask)
-- [Best Practices for Claude Code](https://code.claude.com/docs/en/best-practices)
-- [Claude Code GitHub Discussions](https://github.com/anthropics/claude-code/discussions)
-
-### Technical Deep-Dives (This Wiki)
+### Technical Documentation (This Wiki)
 - [01. Competitive Advantages](./01-competitive-advantages.md) - The 10 architectural innovations
 - [02. Architecture Overview](./02-architecture-overview.md) - System design and data flow
 - [03. Streaming Execution](./03-streaming-execution.md) - Real-time tool execution
@@ -1257,11 +1094,23 @@ This FAQ synthesizes information from:
 - [09. Production Engineering](./09-production-engineering.md) - Optimization patterns
 - [10. Lessons Learned](./10-lessons-learned.md) - Key takeaways
 
+### Codebase Analysis
+- **Source:** Claude Code npm package (March 2026)
+- **Lines analyzed:** ~512,000 TypeScript
+- **Files reviewed:** ~1,900
+- **Methodology:** Source map extraction + code review
+
+### Related Technologies
+- [Bun Runtime](https://bun.sh) - Fast JavaScript runtime
+- [React + Ink](https://github.com/vadimdemedes/ink) - React for terminal
+- [Model Context Protocol](https://modelcontextprotocol.io) - Tool integration standard
+- [Anthropic API](https://docs.anthropic.com) - Claude API documentation
+
 ---
 
-**Have more questions?**
+**Want to learn more?**
 
-- 📚 Read the [full technical documentation](./README.md)
-- 🐛 Report issues at [github.com/anthropics/claude-code/issues](https://github.com/anthropics/claude-code/issues)
-- 💬 Join discussions at [github.com/anthropics/claude-code/discussions](https://github.com/anthropics/claude-code/discussions)
-- 📖 Learn more at [claude.com/code](https://claude.com/code)
+- 📚 Read the [complete technical documentation](./README.md)
+- 🔍 Explore the [codebase patterns](./10-lessons-learned.md)
+- 🏗️ Apply these [architectural principles](./09-production-engineering.md) to your own tools
+- 💡 Study the [competitive analysis](./01-competitive-advantages.md) for positioning insights

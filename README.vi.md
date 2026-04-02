@@ -24,29 +24,23 @@
 
 ## Bắt đầu nhanh & Câu hỏi thường gặp
 
-**Mới sử dụng Claude Code?** Bắt đầu tại đây để có câu trả lời nhanh và hướng dẫn thực tế:
+**Mới tìm hiểu wiki?** Bắt đầu tại đây để có câu trả lời nhanh về kiến trúc Claude Code:
 
-### Cài đặt & Thiết lập
+### Hiểu về Kiến trúc
 
-- **Lỗi quyền với npm?** Đừng dùng `sudo npm install -g` - [sửa quyền npm](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally) hoặc dùng trình cài đặt gốc
-- **Người dùng Windows:** Chạy terminal với quyền Administrator khi cài đặt lần đầu
-- **Bước đầu tiên:** Tạo file `CLAUDE.md` trong thư mục gốc dự án - cải thiện lớn nhất bạn có thể làm
+- **Điểm khác biệt là gì?** → 10 cải tiến: streaming execution, autocompaction, cache fork, React CLI, AST security
+- **Cấu trúc tổ chức?** → Nhiều lớp: UI (React) → Commands (85) → Query Engine → Tools (40+) → Services
+- **Tại sao React cho CLI?** → UI declarative, tái sử dụng component, quản lý state dễ hơn
 
-### Mẹo quy trình làm việc quan trọng
+### Câu hỏi Kỹ thuật Chính
 
-1. **Sử dụng Plan Mode cho 80% phiên làm việc** - Để Claude suy nghĩ trước khi code (tránh lãng phí công sức)
-2. **Chạy `/clear` giữa các tác vụ không liên quan** - Giữ ngữ cảnh sạch cho công việc mới
-3. **Để autocompaction hoạt động** - Đừng xóa ngữ cảnh thủ công trừ khi chuyển dự án
+- **Streaming execution hoạt động thế nào?** → Tools chạy song song trong khi LLM stream (nhanh hơn 2-5x)
+- **Autocompaction hoạt động thế nào?** → 5 lớp tự động tóm tắt tin nhắn cũ (tiết kiệm 85% chi phí)
+- **Cache fork pattern là gì?** → Agents chia sẻ cached context (giảm 90% chi phí cho multi-agent)
+- **AST parsing cải thiện bảo mật như thế nào?** → Phân tích Bash sâu phát hiện lệnh nguy hiểm regex bỏ sót
+- **Tại sao 6 specialized agents?** → Agents chuyên biệt hiệu quả hơn 3x (ví dụ: Explore agent cho tìm kiếm codebase)
 
-### Câu hỏi được hỏi nhiều nhất
-
-- **Tại sao Claude bỏ qua hướng dẫn của tôi?** → Thường là Claude chưa đọc đủ ngữ cảnh. Thêm chi tiết vào CLAUDE.md hoặc yêu cầu rõ ràng "đọc CLAUDE.md trước"
-- **Khi nào dùng command vs agent vs skill?** → Commands cho tác vụ nhanh, agents cho quy trình phức tạp, skills cho mẫu lặp lại
-- **Debug như thế nào?** → Đặt `MCP_DEBUG=1` để xem logs, dùng lệnh `/debug` cho metrics hiệu suất
-- **Hiệu suất giảm?** → Context window đang đầy - chạy `/clear` hoặc để autocompaction xử lý (tự động tại 50, 100, 200 tin nhắn)
-- **Tối ưu chi phí như thế nào?** → Dùng specialized agents (Explore, Bash), bật prompt caching, dùng Haiku cho tác vụ đơn giản
-
-📚 **[Đọc FAQ đầy đủ](./docs/FAQ.md)** | **[Phân tích Kiến trúc chi tiết](./docs_vi/)** | **[Best Practices](https://code.claude.com/docs/en/best-practices)**
+📚 **[Đọc FAQ đầy đủ](./docs/FAQ.md)** | **[Phân tích Kiến trúc chi tiết](./docs_vi/)** | **[Áp dụng các Mẫu này](./docs_vi/10-lessons-learned.md)**
 
 ## Vì sao wiki này tồn tại?
 
