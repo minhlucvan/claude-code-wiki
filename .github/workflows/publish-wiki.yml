@@ -20,9 +20,26 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Initialize wiki if needed
+        env:
+          GH_TOKEN: ${{ secrets.WIKI_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if wiki exists by trying to access it via API
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: token ${GH_TOKEN}" \
+            "https://api.github.com/repos/${{ github.repository }}/pages" 2>/dev/null || true)
+
+          # Try to create initial wiki page via API to initialize the wiki repo
+          echo "Ensuring wiki is initialized..."
+          curl -s -X POST \
+            -H "Authorization: token ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages" \
+            -d '{"source":{"branch":"main","path":"/"}}' 2>/dev/null || true
+
       - name: Publish wiki pages
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WIKI_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           WIKI_URL="https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.wiki.git"
           TMPDIR=$(mktemp -d)
@@ -31,17 +48,23 @@ jobs:
           if git clone "$WIKI_URL" "$TMPDIR" 2>/dev/null; then
             echo "Cloned existing wiki repo."
           else
-            echo "Wiki repo not found. Initializing..."
-            cd "$TMPDIR"
-            git init
-            git checkout -b master
-            cd -
+            echo "::warning::Wiki repo not found. The wiki must be initialized first."
+            echo "Please go to https://github.com/${{ github.repository }}/wiki and create an initial page manually."
+            echo ""
+            echo "If the wiki is already enabled, ensure the token has write access."
+            echo "The default GITHUB_TOKEN cannot push to wiki repos."
+            echo "Create a PAT with 'repo' scope and add it as the WIKI_TOKEN secret."
+            exit 1
           fi
 
           # Configure git
           cd "$TMPDIR"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Detect the default branch of the wiki repo
+          WIKI_BRANCH=$(git symbolic-ref --short HEAD)
+          echo "Wiki default branch: $WIKI_BRANCH"
 
           # Remove old wiki pages (except .git)
           find . -maxdepth 1 -not -name '.git' -not -name '.' -exec rm -rf {} +
@@ -55,8 +78,6 @@ jobs:
             echo "No changes to wiki."
           else
             git commit -m "Update wiki from repo ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
-            git remote remove origin 2>/dev/null || true
-            git remote add origin "$WIKI_URL"
-            git push -u origin master || git push -u origin main
+            git push origin "$WIKI_BRANCH"
             echo "Wiki published successfully!"
           fi
