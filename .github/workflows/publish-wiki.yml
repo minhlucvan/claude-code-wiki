@@ -18,6 +18,45 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Initialize wiki if needed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Try to create the initial wiki page via GitHub API
+          # This is needed because the wiki git repo doesn't exist
+          # until the first page is created
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X GET \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages" 2>/dev/null || true)
+
+          # Check if wiki repo exists by trying to clone it
+          if ! git clone "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.wiki.git" /tmp/wiki-test 2>/dev/null; then
+            echo "Wiki not initialized. Creating initial page via API..."
+            curl -s -X POST \
+              -H "Authorization: token $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/pages" \
+              -d '{"source":{"branch":"main","path":"/"}}' 2>/dev/null || true
+
+            # Alternative: Initialize wiki by pushing directly
+            mkdir -p /tmp/wiki-init
+            cd /tmp/wiki-init
+            git init
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            cp "${{ github.workspace }}/wiki/Home.md" ./Home.md
+            git add Home.md
+            git commit -m "Initialize wiki"
+            git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.wiki.git"
+            git push -u origin master || echo "Could not push initial wiki page. Please create the first wiki page manually at https://github.com/${{ github.repository }}/wiki/new"
+            cd -
+          else
+            echo "Wiki already initialized."
+            rm -rf /tmp/wiki-test
+          fi
+
       - name: Publish wiki
         uses: Andrew-Chen-Wang/github-wiki-action@v4
         with:
