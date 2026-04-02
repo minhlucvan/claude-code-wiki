@@ -90,13 +90,12 @@ See [Architecture Overview](./docs/02-architecture-overview.md) for detailed sub
 
 ## Source Code Repository
 
-⚠️ **IMPORTANT DISCLOSURE**: This wiki analyzes **publicly available source code** from a third-party repository, not an official Anthropic release.
+⚠️ **IMPORTANT DISCLOSURE**: This wiki analyzes Claude Code source code from a public GitHub repository.
 
 **Source of analysis:**
 - 📦 **GitHub Repository**: [https://github.com/777genius/claude-code-source-code-full](https://github.com/777genius/claude-code-source-code-full)
-- 📅 **Version analyzed** - Appears to be from March 2026 timeframe
-- ⚠️ **Third-party repository** - NOT officially distributed by Anthropic
-- 🔗 **Official product**: [claude.com/code](https://claude.com/code) (proprietary, closed source)
+- 📅 **Version analyzed** - Claude Code from March 2026 timeframe
+- 🔗 **Official product**: [claude.com/code](https://claude.com/code)
 
 **Analysis methodology:**
 1. **Source extraction** - Cloned from GitHub repository (see link above)
@@ -447,8 +446,8 @@ Issues and pull requests welcome for:
 **Source Code Ownership:**
 - Claude Code is **proprietary software** © Anthropic, PBC
 - All source code, trademarks, and intellectual property belong to Anthropic
-- This wiki does **not** redistribute any Anthropic code
-- Analysis based on publicly distributed npm package with source maps
+- This wiki does **not** host or redistribute the code
+- Analysis based on source code from GitHub repository listed above
 
 **Wiki Content:**
 - Documentation and analysis © 2026 Contributors
@@ -485,7 +484,7 @@ This analysis likely qualifies as **fair use** under copyright law:
 - Educational value for software engineering community
 
 **Legal position:**
-We analyze code from a **publicly accessible third-party repository**. We do not host, distribute, or republish the source code. Our wiki provides educational commentary and analysis, which is transformative fair use. The third-party repository owner is responsible for their own legal compliance with any applicable licenses or terms.
+We analyze code from a **publicly accessible GitHub repository**. We do not host, distribute, or republish the source code. Our wiki provides educational commentary and analysis, which is transformative fair use.
 
 ### Ethical Guidelines
 
