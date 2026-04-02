@@ -89,21 +89,6 @@ Claude Code là một ví dụ rất rõ của **AI tooling ở cấp độ prod
     - Lỗ hổng Critical/High/Medium với điểm CVSS
     - Khuyến nghị khắc phục và hạ tầng bảo mật
 
-## So sánh nhanh với đối thủ
-
-| Tính năng | Claude Code | Cursor | Continue | Aider |
-|---------|-------------|--------|----------|-------|
-| **Streaming Tool Execution** | ✅ Song song | ❌ Tuần tự | ❌ Tuần tự | ❌ Tuần tự |
-| **Context Management** | ✅ Tự nén 5 lớp | ⚠️ Cắt bớt cơ bản | ⚠️ Cắt bớt cơ bản | ⚠️ Thủ công |
-| **Multi-Agent** | ✅ Có sẵn, chia sẻ cache | ❌ Không | ❌ Không | ⚠️ Hạn chế |
-| **Security** | ✅ AST + quyền | ⚠️ Prompt cơ bản | ⚠️ Prompt cơ bản | ⚠️ Chờ duyệt |
-| **Terminal UI** | ✅ React/Ink | N/A | N/A | ⚠️ Cơ bản |
-| **MCP Support** | ✅ Client + Server | ⚠️ Client | ⚠️ Client | ❌ Không |
-| **Prompt Caching** | ✅ Tối ưu fork | ⚠️ Cơ bản | ⚠️ Cơ bản | ❌ Không |
-| **IDE Integration** | ✅ Bridge mode | ✅ Có sẵn | ✅ Có sẵn | ❌ CLI-only |
-
-**Chú thích**: ✅ Nâng cao • ⚠️ Cơ bản • ❌ Không có
-
 ## Số liệu đáng chú ý
 
 | Chỉ số | Giá trị |

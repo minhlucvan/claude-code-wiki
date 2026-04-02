@@ -94,21 +94,6 @@ Claude Code represents **production-grade AI tooling** at scale. By analyzing it
     - Critical/High/Medium vulnerabilities with CVSS scores
     - Remediation recommendations and security infrastructure
 
-## Competitive Positioning Overview
-
-| Feature | Claude Code | Cursor | Continue | Aider |
-|---------|-------------|--------|----------|-------|
-| **Streaming Tool Execution** | ✅ Concurrent | ❌ Sequential | ❌ Sequential | ❌ Sequential |
-| **Context Management** | ✅ 5-layer autocompaction | ⚠️ Basic truncation | ⚠️ Basic truncation | ⚠️ Manual |
-| **Multi-Agent** | ✅ Native with cache sharing | ❌ No | ❌ No | ⚠️ Limited |
-| **Security** | ✅ AST parsing + permissions | ⚠️ Basic prompts | ⚠️ Basic prompts | ⚠️ User approval |
-| **Terminal UI** | ✅ React/Ink (rich) | N/A (IDE) | N/A (IDE) | ⚠️ Basic CLI |
-| **MCP Support** | ✅ Client + Server | ⚠️ Client only | ⚠️ Client only | ❌ No |
-| **Prompt Caching** | ✅ Fork optimization | ⚠️ Basic | ⚠️ Basic | ❌ No |
-| **IDE Integration** | ✅ Bridge mode | ✅ Native | ✅ Native | ❌ CLI only |
-
-**Legend**: ✅ Advanced implementation • ⚠️ Basic implementation • ❌ Not available
-
 ## Key Statistics
 
 | Metric | Value |

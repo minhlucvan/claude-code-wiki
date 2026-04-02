@@ -187,20 +187,6 @@ This wiki documents these patterns and techniques so you can learn from and appl
 9. **Integration Ecosystem** - Dual-role MCP (client + server), IDE bridges, skill system
 10. **Fleet-Scale Thinking** - Cost optimization at organization level (Gtok/week savings)
 
-### 📊 Competitive Positioning
-
-| Feature | Claude Code | Cursor | Continue | Aider |
-|---------|-------------|--------|----------|-------|
-| **Streaming Tool Execution** | ✅ Concurrent | ❌ Sequential | ❌ Sequential | ❌ Sequential |
-| **Context Management** | ✅ 5-layer autocompaction | ⚠️ Basic truncation | ⚠️ Basic truncation | ⚠️ Manual |
-| **Multi-Agent** | ✅ Native with cache sharing | ❌ No | ❌ No | ⚠️ Limited |
-| **Security** | ✅ AST parsing + permissions | ⚠️ Basic prompts | ⚠️ Basic prompts | ⚠️ User approval |
-| **Terminal UI** | ✅ React/Ink (rich) | N/A (IDE) | N/A (IDE) | ⚠️ Basic CLI |
-| **MCP Support** | ✅ Client + Server | ⚠️ Client only | ⚠️ Client only | ❌ No |
-| **Prompt Caching** | ✅ Fork optimization | ⚠️ Basic | ⚠️ Basic | ❌ No |
-
-**Legend**: ✅ Advanced implementation • ⚠️ Basic implementation • ❌ Not available
-
 ## Wiki Structure
 
 ```
