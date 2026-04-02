@@ -1,0 +1,115 @@
+---
+name: first-time-setup
+description: First-time setup flow for article-illustrator preferences
+---
+
+# First-Time Setup
+
+## Overview
+
+When no EXTEND.md is found, guide user through preference setup.
+
+## Setup Flow
+
+```
+No EXTEND.md found
+        │
+        ▼
+┌─────────────────────┐
+│ AskUserQuestion     │
+│ (all questions)     │
+└─────────────────────┘
+        │
+        ▼
+┌─────────────────────┐
+│ Create EXTEND.md    │
+└─────────────────────┘
+        │
+        ▼
+    Continue to Step 1
+```
+
+> **Note:** Project branding from `ILLUSTRATION.md` (if present) is applied automatically alongside EXTEND.md. See Configuration Hierarchy in SKILL.md for precedence.
+
+## Questions
+
+**Language**: Use user's input language or preferred language for all questions. Do not always use English.
+
+Use single AskUserQuestion with multiple questions (AskUserQuestion auto-adds "Other" option):
+
+### Question 1: Watermark
+
+```
+header: "Watermark"
+question: "Watermark text for generated illustrations? Type your watermark content (e.g., name, @handle)"
+options:
+  - label: "No watermark (Recommended)"
+    description: "No watermark, can enable later in EXTEND.md"
+```
+
+Position defaults to bottom-right.
+
+### Question 2: Preferred Style
+
+```
+header: "Style"
+question: "Default illustration style preference? Or type another style name or your custom style"
+options:
+  - label: "None (Recommended)"
+    description: "Auto-select based on content analysis"
+  - label: "notion"
+    description: "Minimalist hand-drawn line art"
+  - label: "warm"
+    description: "Friendly, approachable, personal"
+```
+
+### Question 3: Save Location
+
+```
+header: "Save"
+question: "Where to save preferences?"
+options:
+  - label: "Project"
+    description: ".article-illustrator/ (this project only)"
+  - label: "User"
+    description: "~/.config/article-illustrator/ (all projects)"
+```
+
+## Save Locations
+
+| Choice | Path | Scope |
+|--------|------|-------|
+| Project | `.article-illustrator/EXTEND.md` | Current project |
+| User | `~/.config/article-illustrator/EXTEND.md` | All projects |
+
+## After Setup
+
+1. Create directory if needed
+2. Write EXTEND.md with frontmatter
+3. Confirm: "Preferences saved to [path]"
+4. Continue to Step 1
+
+## EXTEND.md Template
+
+```yaml
+---
+version: 1
+watermark:
+  enabled: [true/false]
+  content: "[user input or empty]"
+  position: bottom-right
+  opacity: 0.7
+preferred_style:
+  name: [selected style or null]
+  description: ""
+language: null
+custom_styles: []
+---
+```
+
+## Modifying Preferences Later
+
+Users can edit EXTEND.md directly or run setup again:
+- Delete EXTEND.md to trigger setup
+- Edit YAML frontmatter for quick changes
+- Full schema: `config/preferences-schema.md`

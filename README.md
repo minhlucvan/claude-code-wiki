@@ -22,6 +22,32 @@
 
 **This isn't just another AI coding tool** — it's built by the team that created Claude, with first-party API access and optimization opportunities competitors don't have.
 
+## Quick Start & Common Questions
+
+**New to Claude Code?** Start here for quick answers and practical guidance:
+
+### Installation & Setup
+
+- **Permission issues with npm?** Don't use `sudo npm install -g` - [fix npm permissions](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally) or use native installer
+- **Windows users:** Run terminal as Administrator for initial install
+- **First step:** Create `CLAUDE.md` in your project root - single biggest improvement you can make
+
+### Essential Workflow Tips
+
+1. **Use Plan Mode for 80% of sessions** - Let Claude think before coding (prevents wasted work)
+2. **Run `/clear` between unrelated tasks** - Keeps context clean for new work
+3. **Let autocompaction work** - Don't manually clear context unless switching projects
+
+### Most Asked Questions
+
+- **Why does Claude ignore my instructions?** → Usually means Claude hasn't read enough context. Add details to CLAUDE.md or explicitly ask "read CLAUDE.md first"
+- **When to use command vs agent vs skill?** → Commands for quick tasks, agents for complex workflows, skills for repeated patterns
+- **How to debug?** → Set `MCP_DEBUG=1` to see logs, use `/debug` command for performance metrics
+- **Performance degrading?** → Context window filling up - run `/clear` or let autocompaction handle it (automatic at 50, 100, 200 messages)
+- **How to optimize costs?** → Use specialized agents (Explore, Bash), enable prompt caching, use Haiku for simple tasks
+
+📚 **[Read Full FAQ](./docs/FAQ.md)** | **[Architecture Deep-Dive](./docs/)** | **[Best Practices](https://code.claude.com/docs/en/best-practices)**
+
 ## Why This Wiki Exists
 
 This wiki exists to document the production-grade patterns and architectural decisions that make Claude Code exceptional. Learn how it solves hard problems that competitors struggle with:

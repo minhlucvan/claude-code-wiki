@@ -4,210 +4,215 @@
 
 # Claude Code Wiki
 
-> **La guía completa sobre la arquitectura, patrones e innovaciones competitivas de Claude Code — Aprende cómo logra una ejecución 2-5 veces más rápida, memoria de conversación ilimitada y un ahorro del 90% en costos**
+> **La guia completa de la arquitectura, los patrones y las innovaciones competitivas de Claude Code. Aprende como logra una ejecucion 2-5 veces mas rapida, memoria de conversacion ilimitada y un ahorro del 90% en costos**
 
 [English](./README.md) | [Tiếng Việt](./README.vi.md) | [中文](./README.zh.md) | **Español** | [日本語](./README.ja.md)
 
-## Qué es esta Wiki
+## Que es esta wiki
 
-**Claude Code Wiki** es la guía definitiva para comprender la arquitectura, los patrones de ingeniería y las ventajas competitivas de Claude Code. A través del análisis de **512,000 líneas de TypeScript de producción**, esta wiki revela:
+**Claude Code Wiki** es la guia definitiva para entender la arquitectura, los patrones de ingenieria y las ventajas competitivas de Claude Code. A partir del analisis de **512,000 lineas de TypeScript en produccion**, esta wiki revela:
 
-- **10 innovaciones arquitectónicas** que hacen que Claude Code sea superior a los competidores
-- **Ejecución de herramientas en streaming** que ejecuta herramientas mientras el LLM transmite (UX 2-5 veces más rápida)
-- **Gestión de contexto de 5 capas** que permite memoria de conversación ilimitada
-- **Orquestación multi-agente** con compartición de caché (90% de reducción de costos)
-- **UI de terminal React** que proporciona UX de grado de producción en una CLI
-- **Seguridad a nivel AST** para análisis profundo de comandos (no regex)
-- **Patrones de ingeniería de producción** optimizados para economías a escala de flota
+- **10 innovaciones arquitectonicas** que hacen que Claude Code supere a sus competidores
+- **Ejecucion de herramientas en streaming** que ejecuta herramientas mientras el LLM sigue generando texto, con una UX 2-5 veces mas rapida
+- **Gestion de contexto en 5 capas** que permite memoria de conversacion ilimitada
+- **Orquestacion multiagente** con cache compartida, con una reduccion del 90% en costos
+- **UI de terminal con React** que ofrece una experiencia de nivel produccion en una CLI
+- **Seguridad a nivel AST** para analizar comandos en profundidad, no con regex
+- **Patrones de ingenieria de produccion** optimizados para economias de escala a nivel de flota
 
-**Esto no es solo otra herramienta de codificación AI** — está construida por el equipo que creó Claude, con acceso API de primera parte y oportunidades de optimización que los competidores no tienen.
+**No es solo otra herramienta de programacion con IA**: esta creada por el equipo que construyo Claude, con acceso propio a la API y oportunidades de optimizacion que otros competidores no tienen.
 
-## Por Qué Existe esta Wiki
+## Por que existe esta wiki
 
-Esta wiki existe para documentar los patrones de grado de producción y las decisiones arquitectónicas que hacen que Claude Code sea excepcional. Aprende cómo resuelve problemas difíciles con los que los competidores luchan:
+Esta wiki documenta los patrones de nivel produccion y las decisiones arquitectonicas que hacen especial a Claude Code. Explica como resuelve problemas dificiles con los que otros competidores siguen lidiando:
 
-- **Velocidad**: La mayoría de las herramientas esperan a que el LLM complete antes de ejecutar herramientas secuencialmente. Claude Code ejecuta herramientas concurrentemente mientras transmite, logrando operaciones multi-herramienta 2-5 veces más rápidas.
-- **Memoria**: Los competidores usan truncamiento de contexto básico o requieren limpieza manual. Claude Code usa un pipeline de autocompactación de 5 capas para conversaciones ilimitadas.
-- **Costo**: Ejecutar múltiples agentes es costoso. La optimización de bifurcación de caché de Claude Code logra una reducción del 90% en costos a través de caché compartida.
-- **Seguridad**: La mayoría de las herramientas usan regex para análisis de comandos. Claude Code usa análisis Bash a nivel AST para análisis de seguridad profundo.
-- **Escala**: Construido para economías a escala de flota, optimizando para Gtok/semana a nivel de organización.
+- **Velocidad**: la mayoria de herramientas espera a que el LLM termine para ejecutar herramientas en secuencia. Claude Code las ejecuta en paralelo mientras hace streaming, con operaciones multi-herramienta 2-5 veces mas rapidas.
+- **Memoria**: muchos competidores usan truncado basico de contexto o requieren limpieza manual. Claude Code usa una canalizacion de autocompactacion de 5 capas para conversaciones ilimitadas.
+- **Costo**: ejecutar varios agentes suele ser caro. La optimizacion de bifurcacion de cache de Claude Code reduce costos en un 90% mediante cache compartida.
+- **Seguridad**: la mayoria de herramientas usa regex para analizar comandos. Claude Code utiliza parsing Bash a nivel AST para un analisis de seguridad mucho mas profundo.
+- **Escala**: esta pensado para economias de escala a nivel de flota, optimizando Gtok por semana a nivel organizacion.
 
-Esta wiki documenta estos patrones y técnicas para que puedas aprender y aplicarlos a tus propias herramientas AI.
+Esta wiki documenta esos patrones y tecnicas para que puedas aprenderlos y aplicarlos en tus propias herramientas de IA.
 
-## Qué Aprenderás
+## Que aprenderas
 
-### 🚀 Innovaciones Centrales
+### Innovaciones principales
 
-1. **Ejecución de Herramientas en Streaming** - Cómo ejecutar herramientas concurrentemente mientras el LLM transmite respuestas
-2. **Gestión de Contexto** - Pipeline de 5 capas para memoria de conversación ilimitada con autocompactación
-3. **Orquestación Multi-Agente** - 6 agentes especializados con arquitectura de compartición de caché
-4. **Optimización de Caché de Prompt** - Patrón de bifurcación que logra 90% de reducción de costos entre agentes
-5. **UI de Terminal React** - Arquitectura de componentes de grado de producción para herramientas CLI
+1. **Ejecucion de herramientas en streaming**: como ejecutar herramientas en paralelo mientras el LLM transmite respuestas
+2. **Gestion de contexto**: canalizacion de 5 capas para memoria conversacional ilimitada con autocompactacion
+3. **Orquestacion multiagente**: 6 agentes especializados con arquitectura de cache compartida
+4. **Optimizacion de cache de prompts**: patron de bifurcacion que logra un 90% de reduccion de costos entre agentes
+5. **UI de terminal con React**: arquitectura de componentes de nivel produccion para herramientas CLI
 
-### 🔒 Ingeniería de Producción
+### Ingenieria de produccion
 
-6. **Seguridad a Nivel AST** - Análisis profundo de comandos Bash y sistema de permisos
-7. **Feature Flags** - Eliminación de código muerto con costo de runtime cero
-8. **Optimización de Inicio** - Patrones de precarga paralela y carga diferida
-9. **Ecosistema de Integración** - MCP de doble rol (cliente + servidor), puentes IDE, sistema de skills
-10. **Pensamiento a Escala de Flota** - Optimización de costos a nivel de organización (ahorro de Gtok/semana)
+6. **Seguridad a nivel AST**: analisis profundo de comandos Bash y sistema de permisos
+7. **Feature flags**: eliminacion de codigo muerto con costo de ejecucion cero
+8. **Optimizacion de arranque**: patrones de precarga en paralelo y carga diferida
+9. **Ecosistema de integracion**: MCP con doble rol (cliente + servidor), puentes con IDE y sistema de skills
+10. **Pensamiento a escala de flota**: optimizacion de costos a nivel organizacion, incluido el ahorro de Gtok por semana
 
-### 📊 Posicionamiento Competitivo
+### Posicionamiento competitivo
 
-| Característica | Claude Code | Cursor | Continue | Aider |
+| Caracteristica | Claude Code | Cursor | Continue | Aider |
 |----------------|-------------|--------|----------|-------|
-| **Ejecución de Herramientas en Streaming** | ✅ Concurrente | ❌ Secuencial | ❌ Secuencial | ❌ Secuencial |
-| **Gestión de Contexto** | ✅ Autocompactación de 5 capas | ⚠️ Truncamiento básico | ⚠️ Truncamiento básico | ⚠️ Manual |
-| **Multi-Agente** | ✅ Nativo con compartición de caché | ❌ No | ❌ No | ⚠️ Limitado |
-| **Seguridad** | ✅ Análisis AST + permisos | ⚠️ Prompts básicos | ⚠️ Prompts básicos | ⚠️ Aprobación de usuario |
-| **UI de Terminal** | ✅ React/Ink (rica) | N/A (IDE) | N/A (IDE) | ⚠️ CLI básica |
-| **Soporte MCP** | ✅ Cliente + Servidor | ⚠️ Solo cliente | ⚠️ Solo cliente | ❌ No |
-| **Caché de Prompt** | ✅ Optimización de bifurcación | ⚠️ Básica | ⚠️ Básica | ❌ No |
+| **Ejecucion de herramientas en streaming** | ✅ Concurrente | ❌ Secuencial | ❌ Secuencial | ❌ Secuencial |
+| **Gestion de contexto** | ✅ Autocompactacion en 5 capas | ⚠️ Truncado basico | ⚠️ Truncado basico | ⚠️ Manual |
+| **Multiagente** | ✅ Nativo con cache compartida | ❌ No | ❌ No | ⚠️ Limitado |
+| **Seguridad** | ✅ Parsing AST + permisos | ⚠️ Prompts basicos | ⚠️ Prompts basicos | ⚠️ Aprobacion del usuario |
+| **UI de terminal** | ✅ React/Ink (rica) | N/A (IDE) | N/A (IDE) | ⚠️ CLI basica |
+| **Soporte MCP** | ✅ Cliente + servidor | ⚠️ Solo cliente | ⚠️ Solo cliente | ❌ No |
+| **Cache de prompts** | ✅ Optimizacion por bifurcacion | ⚠️ Basica | ⚠️ Basica | ❌ No |
 
-**Leyenda**: ✅ Implementación avanzada • ⚠️ Implementación básica • ❌ No disponible
+**Leyenda**: ✅ Implementacion avanzada • ⚠️ Implementacion basica • ❌ No disponible
 
-## Estructura de la Wiki
+## Estructura de la wiki
 
-```
+```text
 claude-code-wiki/
-├── docs/                           # 10 guías wiki completas
-│   ├── README.md                   # Navegación y descripción general de la wiki
-│   ├── 01-competitive-advantages.md   # Las 10 ventajas injustas
-│   ├── 02-architecture-overview.md    # Diseño del sistema y flujo de datos
-│   ├── 03-streaming-execution.md      # Ejecución de herramientas en tiempo real
-│   ├── 04-context-management.md       # Pipeline de contexto de 5 capas
-│   ├── 05-multi-agent-orchestration.md # Sistema multi-agente
-│   ├── 06-terminal-ux.md              # UI de terminal React
-│   ├── 07-security-model.md           # Análisis AST y permisos
+├── docs_es/                        # Guias y resumenes en español
+│   ├── README.md                   # Navegacion y vista general en español
+│   ├── 01-competitive-advantages.md   # Las 10 ventajas diferenciales
+│   ├── 02-architecture-overview.md    # Diseno del sistema y flujo de datos
+│   ├── 03-streaming-execution.md      # Ejecucion de herramientas en tiempo real
+│   ├── 04-context-management.md       # Canalizacion de contexto en 5 capas
+│   ├── 05-multi-agent-orchestration.md # Sistema multiagente
+│   ├── 06-terminal-ux.md              # UX de terminal con React
+│   ├── 07-security-model.md           # Analisis AST y permisos
 │   ├── 08-integration-ecosystem.md    # MCP, puentes IDE, skills
-│   ├── 09-production-engineering.md   # Patrones de optimización
-│   └── 10-lessons-learned.md          # Conclusiones clave
-└── claude-code/                    # Código fuente completo (512K LOC)
-    ├── src/                        # Implementación TypeScript
-    ├── skills/                     # 85+ comandos slash
+│   ├── 09-production-engineering.md   # Patrones de optimizacion
+│   └── 10-lessons-learned.md          # Principales aprendizajes
+└── claude-code/                    # Codigo fuente completo (512K LOC)
+    ├── src/                        # Implementacion en TypeScript
+    ├── skills/                     # Mas de 85 comandos slash
     └── package.json                # Dependencias y scripts
 ```
 
-## Guía de Inicio Rápido
+## Guia de inicio rapido
 
-Navega la wiki según tus objetivos:
+Recorre la wiki segun tu objetivo:
 
-### 🎯 Construyendo Herramientas de Codificación AI
+### Construir herramientas de programacion con IA
 
-**Comienza aquí**: [Ventajas Competitivas](./docs/01-competitive-advantages.md)
+**Empieza aqui**: [Ventajas competitivas](./docs_es/01-competitive-advantages.md)
 
-Descubre las 10 innovaciones arquitectónicas:
-- Ejecución de herramientas en streaming para UX 2-5 veces más rápida
-- Orquestación multi-agente con compartición de caché
-- Gestión de contexto para conversaciones ilimitadas
-- Seguridad de producción y optimización de costos
+Descubre las 10 innovaciones arquitectonicas:
+- ejecucion de herramientas en streaming para una UX 2-5 veces mas rapida
+- orquestacion multiagente con cache compartida
+- gestion de contexto para conversaciones ilimitadas
+- seguridad de produccion y optimizacion de costos
 
-**Luego explora**: [Lecciones Aprendidas](./docs/10-lessons-learned.md) para conclusiones accionables que puedes aplicar a tus propias herramientas.
+**Despues continua con**: [Lecciones aprendidas](./docs_es/10-lessons-learned.md), donde se resumen ideas practicas que puedes aplicar a tus propias herramientas.
 
-### 🔍 Evaluando Claude Code
+### Evaluar Claude Code
 
-**Comienza aquí**: [Descripción General de la Arquitectura](./docs/02-architecture-overview.md)
+**Empieza aqui**: [Vision general de la arquitectura](./docs_es/02-architecture-overview.md)
 
-Comprende el diseño del sistema y la preparación para producción:
-- Arquitectura de alto nivel y flujo de datos
-- Subsistemas centrales y responsabilidades
-- Análisis de la pila tecnológica (Bun, React, TypeScript)
+Entiende el diseno del sistema y su nivel de madurez para produccion:
+- arquitectura de alto nivel y flujo de datos
+- subsistemas principales y sus responsabilidades
+- analisis del stack tecnologico (Bun, React, TypeScript)
 
 **Luego revisa**:
-- [Modelo de Seguridad](./docs/07-security-model.md) para preocupaciones empresariales
-- [Ecosistema de Integración](./docs/08-integration-ecosystem.md) para extensibilidad
+- [Modelo de seguridad](./docs_es/07-security-model.md) para inquietudes empresariales
+- [Ecosistema de integracion](./docs_es/08-integration-ecosystem.md) para extensibilidad
 
-### 💡 Aprendiendo Patrones Avanzados
+### Aprender patrones avanzados
 
-**Comienza aquí**: [Lecciones Aprendidas](./docs/10-lessons-learned.md)
+**Empieza aqui**: [Lecciones aprendidas](./docs_es/10-lessons-learned.md)
 
-Obtén patrones accionables para TypeScript/React de producción:
-- Arquitectura React en CLI
-- Gestión de estado a escala
-- Técnicas de optimización de costos
-- Ingeniería a escala de flota
+Obtendras patrones aplicables a TypeScript y React en entornos de produccion:
+- arquitectura React para CLI
+- gestion de estado a gran escala
+- tecnicas de optimizacion de costos
+- ingenieria a escala de flota
 
-**Luego profundiza**:
-- [UX de Terminal](./docs/06-terminal-ux.md) para patrones React/Ink
-- [Ingeniería de Producción](./docs/09-production-engineering.md) para técnicas de optimización
+**Despues profundiza en**:
+- [UX de terminal](./docs_es/06-terminal-ux.md) para patrones con React/Ink
+- [Ingenieria de produccion](./docs_es/09-production-engineering.md) para tecnicas de optimizacion
 
-## Índice de la Wiki
+## Indice de la wiki
 
-| Guía | Descripción | Temas Clave |
+| Guia | Descripcion | Temas clave |
 |------|-------------|-------------|
-| [01. Ventajas Competitivas](./docs/01-competitive-advantages.md) | Las 10 innovaciones que distinguen a Claude Code | Ejecución en streaming, optimización de caché, seguridad AST |
-| [02. Descripción General de la Arquitectura](./docs/02-architecture-overview.md) | Diseño del sistema y flujo de datos | Subsistemas centrales, pila tecnológica, arquitectura de producción |
-| [03. Ejecución en Streaming](./docs/03-streaming-execution.md) | Cómo las herramientas se ejecutan concurrentemente mientras el LLM transmite | Coordinación asíncrona, manejo de errores, aceleración 2-5x |
-| [04. Gestión de Contexto](./docs/04-context-management.md) | Pipeline de 5 capas para conversaciones ilimitadas | Autocompactación, caché de prompts, optimización de memoria |
-| [05. Orquestación Multi-Agente](./docs/05-multi-agent-orchestration.md) | 6 agentes especializados con compartición de caché | Patrón de bifurcación, modo coordinador, tipos de agente |
-| [06. UX de Terminal](./docs/06-terminal-ux.md) | Arquitectura de UI de terminal React | Diseño de componentes, gestión de estado, 85+ comandos |
-| [07. Modelo de Seguridad](./docs/07-security-model.md) | Análisis Bash a nivel AST y permisos | Análisis de comandos, integración de sandbox, modelo de amenazas |
-| [08. Ecosistema de Integración](./docs/08-integration-ecosystem.md) | MCP, puentes IDE y sistema de skills | MCP de doble rol, VS Code/JetBrains, skills condicionales |
-| [09. Ingeniería de Producción](./docs/09-production-engineering.md) | Patrones de optimización y pensamiento a escala de flota | Velocidad de inicio, feature flags, optimización de costos |
-| [10. Lecciones Aprendidas](./docs/10-lessons-learned.md) | Principales conclusiones y patrones para adoptar | Insights accionables, decisiones de diseño, compensaciones |
+| [01. Ventajas competitivas](./docs_es/01-competitive-advantages.md) | Las 10 innovaciones que distinguen a Claude Code | Ejecucion en streaming, optimizacion de cache, seguridad AST |
+| [02. Vision general de la arquitectura](./docs_es/02-architecture-overview.md) | Diseno del sistema y flujo de datos | Subsistemas principales, stack tecnologico, arquitectura de produccion |
+| [03. Ejecucion en streaming](./docs_es/03-streaming-execution.md) | Como las herramientas se ejecutan en paralelo mientras el LLM sigue transmitiendo | Coordinacion asincrona, manejo de errores, mejora de 2-5x |
+| [04. Gestion de contexto](./docs_es/04-context-management.md) | Canalizacion de 5 capas para conversaciones ilimitadas | Autocompactacion, cache de prompts, optimizacion de memoria |
+| [05. Orquestacion multiagente](./docs_es/05-multi-agent-orchestration.md) | 6 agentes especializados con cache compartida | Patron de bifurcacion, modo coordinador, tipos de agente |
+| [06. UX de terminal](./docs_es/06-terminal-ux.md) | Arquitectura de UI de terminal con React | Diseno de componentes, gestion de estado, mas de 85 comandos |
+| [07. Modelo de seguridad](./docs_es/07-security-model.md) | Parsing Bash a nivel AST y permisos | Analisis de comandos, integracion con sandbox, modelo de amenazas |
+| [08. Ecosistema de integracion](./docs_es/08-integration-ecosystem.md) | MCP, puentes con IDE y sistema de skills | MCP con doble rol, VS Code/JetBrains, skills condicionales |
+| [09. Ingenieria de produccion](./docs_es/09-production-engineering.md) | Patrones de optimizacion y pensamiento a escala de flota | Velocidad de arranque, feature flags, optimizacion de costos |
+| [10. Lecciones aprendidas](./docs_es/10-lessons-learned.md) | Principales ideas y patrones reutilizables | Insights accionables, decisiones de diseno, tradeoffs |
 
-## Estadísticas Clave
+## Estadisticas clave
 
-| Métrica | Valor |
+| Metrica | Valor |
 |---------|-------|
-| **Total de Líneas de Código** | ~512,000 |
+| **Lineas totales de codigo** | ~512,000 |
 | **Archivos TypeScript** | ~1,900 |
-| **Herramientas Integradas** | 40+ |
-| **Comandos Slash** | 85+ |
-| **Tipos de Agente** | 6 especializados |
+| **Herramientas integradas** | 40+ |
+| **Comandos slash** | 85+ |
+| **Tipos de agente** | 6 especializados |
 | **Runtime** | Bun (alto rendimiento) |
-| **Framework UI** | React + Ink |
-| **Páginas Wiki** | 10 guías completas |
+| **Framework de UI** | React + Ink |
+| **Paginas de la wiki** | 10 guias completas |
 
-## Para Quién es esta Wiki
+## Para quien es esta wiki
 
-### Desarrolladores que Construyen Asistentes de Codificación AI
-Aprende patrones de grado de producción para ejecución en streaming, gestión de contexto y orquestación multi-agente. Comprende cómo lograr UX 2-5 veces más rápida y 90% de reducción de costos.
+### Desarrolladores que crean asistentes de programacion con IA
 
-### Equipos de Producto que Evalúan Herramientas AI
-Compara enfoques arquitectónicos entre Claude Code, Cursor, Continue y Aider. Comprende ventajas competitivas medibles en velocidad, costo y capacidades.
+Aprende patrones de nivel produccion para ejecucion en streaming, gestion de contexto y orquestacion multiagente. Entiende como conseguir una UX 2-5 veces mas rapida y una reduccion del 90% en costos.
 
-### Ingenieros que Aprenden TypeScript/React Avanzado
-Explora arquitectura React en CLI, gestión de estado a escala y patrones de optimización de producción de un código base de 512K LOC.
+### Equipos de producto que evalúan herramientas de IA
 
-### Arquitectos Técnicos
-Estudia decisiones de diseño de sistemas, arquitectura de seguridad y patrones de ingeniería a escala de flota para herramientas AI de producción.
+Compara enfoques arquitectonicos entre Claude Code, Cursor, Continue y Aider. Entiende ventajas competitivas medibles en velocidad, costo y capacidades.
 
-## Metodología de la Wiki
+### Ingenieros que quieren aprender TypeScript y React avanzados
 
-Esta wiki está construida a partir de:
+Explora arquitectura React en CLI, gestion de estado a gran escala y patrones de optimizacion de produccion extraidos de una base de codigo de 512K LOC.
 
-- **Análisis completo del código fuente** de mapas fuente del paquete npm de Claude Code (marzo 2026)
-- **Exploración práctica** y prueba de todas las características principales
-- **Investigación comparativa** con arquitecturas de Cursor, Continue y Aider
-- **Investigación a nivel de código** de 512,000 líneas de TypeScript
-- **Extracción de patrones** de comentarios, tipos y detalles de implementación
+### Arquitectos tecnicos
 
-Toda la documentación se deriva del código real, no de materiales de marketing o pruebas de caja negra.
+Estudia decisiones de diseno de sistemas, arquitectura de seguridad y patrones de ingenieria a escala de flota para herramientas de IA en produccion.
 
-## Contribuir a la Wiki
+## Metodologia de la wiki
 
-¿Encontraste algo interesante? ¿Tienes insights adicionales? Esta wiki es un documento vivo destinado a capturar:
+Esta wiki se construyo a partir de:
 
-- Momentos "wow" en la arquitectura
-- Patrones accionables para construir herramientas AI
-- Decisiones de diseño y compensaciones
-- Insights competitivos y diferenciación
+- **Analisis completo del codigo fuente** de los source maps del paquete npm de Claude Code (marzo de 2026)
+- **Exploracion practica** y pruebas de todas las funciones principales
+- **Investigacion comparativa** con las arquitecturas de Cursor, Continue y Aider
+- **Analisis a nivel de codigo** de 512,000 lineas de TypeScript
+- **Extraccion de patrones** a partir de comentarios, tipos y detalles de implementacion
 
-Issues y pull requests bienvenidos para:
-- Documentación adicional o correcciones
-- Nuevos descubrimientos en el código base
-- Explicaciones y ejemplos de patrones
-- Insights comparativos con otras herramientas
+Toda la documentacion se deriva del codigo real, no de materiales de marketing ni de pruebas de caja negra.
 
-## Licencia y Atribución
+## Contribuir a la wiki
 
-**Código Fuente**: Claude Code es software propietario de Anthropic. Esta wiki es solo para fines educativos.
+¿Encontraste algo interesante? ¿Tienes observaciones adicionales? Esta wiki es un documento vivo pensado para capturar:
 
-**Contenido de la Wiki**: Documentación y análisis © 2026. Compartido para fines educativos e de investigación.
+- momentos "wow" de la arquitectura
+- patrones accionables para construir herramientas de IA
+- decisiones de diseno y tradeoffs
+- insights competitivos y diferenciacion
 
-**Metodología**: Código fuente extraído de mapas fuente npm y documentado a través de revisión de código, no ingeniería inversa.
+Se aceptan issues y pull requests para:
+
+- documentacion adicional o correcciones
+- nuevos hallazgos en la base de codigo
+- explicaciones y ejemplos de patrones
+- comparativas con otras herramientas
+
+## Licencia y atribucion
+
+**Codigo fuente**: Claude Code es software propietario de Anthropic. Esta wiki se comparte solo con fines educativos.
+
+**Contenido de la wiki**: documentacion y analisis © 2026. Compartidos con fines educativos y de investigacion.
+
+**Metodologia**: el codigo fuente se extrajo de source maps de npm y se documento mediante revision de codigo, no mediante ingenieria inversa.
 
 ---
 
-**¿Listo para aprender?** Comienza con [🔥 Ventajas Competitivas](./docs/01-competitive-advantages.md) para descubrir las 10 innovaciones que hacen especial a Claude Code.
+**¿Listo para empezar?** Comienza por [🔥 Ventajas competitivas](./docs_es/01-competitive-advantages.md) para descubrir las 10 innovaciones que hacen especial a Claude Code.
