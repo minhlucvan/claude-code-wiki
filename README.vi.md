@@ -503,48 +503,6 @@ Phân tích này đủ điều kiện cho **sử dụng hợp lý** theo luật 
 - Chúng tôi sẽ nhanh chóng giải quyết các yêu cầu hợp lệ
 - Sẵn sàng hợp tác về attribution
 
-### Tuyên bố Miễn trừ Trách nhiệm
-
-```
-⚠️ TUYÊN BỐ PHÂN TÍCH GIÁO DỤC ⚠️
-
-PHÂN TÍCH REPOSITORY GITHUB BÊN THỨ BA
-
-Wiki này phân tích mã nguồn từ repository GitHub công khai bên thứ ba tại
-https://github.com/777genius/claude-code-source-code-full.
-
-Đây KHÔNG phải là phân tích của:
-- Npm package chính thức của Anthropic
-- Mã nguồn được phát hành chính thức của Claude Code
-- Nội dung được Anthropic xác nhận hoặc xác minh
-
-KHÔNG LIÊN KẾT: Wiki này không liên kết với, được xác nhận bởi, hoặc
-được tài trợ bởi Anthropic, PBC. Anthropic không xác nhận hoặc xác minh
-repository GitHub bên thứ ba này.
-
-KHÔNG BẢO HÀNH: Thông tin được cung cấp "nguyên trạng" không có bảo hành
-dưới bất kỳ hình thức nào. Chúng tôi không đảm bảo về độ chính xác, đầy đủ,
-nguồn gốc hoặc tính hợp pháp của mã trong repository bên thứ ba.
-
-SỬ DỤNG HỢP LÝ: Phân tích này được thực hiện cho mục đích giáo dục và bình luận
-học thuật theo học thuyết sử dụng hợp lý. Chúng tôi không phân phối lại mã nguồn,
-chỉ phân tích và tài liệu hóa các patterns kiến trúc với trích dẫn tối thiểu.
-
-KHÔNG PHẢI LỜI KHUYÊN PHÁP LÝ: Phân tích này không cấu thành lời khuyên pháp lý,
-tài chính hoặc chuyên môn. Tham khảo chuyên gia phù hợp trước khi sử dụng bất kỳ
-thông tin nào từ nguồn bên thứ ba không chính thức.
-
-CHÍNH SÁCH GỠ BỎ: Nếu bạn đại diện Anthropic và có mối quan ngại về nội dung này,
-vui lòng liên hệ qua [Issues]. Chúng tôi sẽ giải quyết nhanh chóng các yêu cầu
-hợp lệ.
-
-THƯƠNG HIỆU: "Claude" và "Claude Code" là thương hiệu của Anthropic, PBC.
-Tất cả thương hiệu khác là tài sản của chủ sở hữu tương ứng.
-
-XÁC MINH ĐỘC LẬP: Bất kỳ ai cũng có thể xác minh phân tích của chúng tôi bằng cách
-clone repository công khai tại https://github.com/777genius/claude-code-source-code-full
-```
-
 ### Trích dẫn & Ghi nhận
 
 **Khi tham chiếu wiki này:**

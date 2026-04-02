@@ -516,47 +516,6 @@ We analyze code from a **publicly accessible GitHub repository**. We do not host
 - We will promptly address any legitimate requests
 - Open to collaboration on attribution
 
-### Disclaimer
-
-```
-EDUCATIONAL ANALYSIS DISCLAIMER
-
-SOURCE: This wiki analyzes source code from a third-party public
-repository: https://github.com/777genius/claude-code-source-code-full
-
-This repository is NOT officially published by Anthropic, PBC.
-
-NOT AFFILIATED: This wiki is not affiliated with, endorsed by, or
-sponsored by Anthropic, PBC. This is independent educational analysis.
-
-NOT OFFICIAL: This analysis may not represent the current production
-version of Claude Code. Features, architecture, and implementation
-may have evolved since the repository snapshot.
-
-NO WARRANTY: Information provided "as is" without warranty. We make
-no guarantees about accuracy, completeness, or currency of information
-relative to the official Claude Code product.
-
-THIRD-PARTY SOURCE: We analyze code from a publicly accessible
-third-party repository. We do not host or redistribute the source code.
-The repository owner is responsible for their own legal compliance.
-
-EDUCATIONAL PURPOSE: This wiki provides educational commentary and
-analysis of software architecture patterns. It is not a substitute
-for official Anthropic documentation.
-
-NOT LEGAL ADVICE: This analysis does not constitute legal, financial,
-or professional advice. Consult appropriate professionals for your
-specific needs.
-
-TAKEDOWN POLICY: If you represent Anthropic and have concerns about
-this educational analysis, please contact us. We respect intellectual
-property rights and will address legitimate concerns.
-
-TRADEMARKS: "Claude" and "Claude Code" are trademarks of Anthropic,
-PBC. All other trademarks are property of respective owners.
-```
-
 ### Citation & Attribution
 
 **When referencing this wiki:**
