@@ -22,6 +22,19 @@
 
 **Đây không chỉ là thêm một công cụ AI để viết code**. Nó được xây dựng bởi chính đội ngũ tạo ra Claude, với quyền truy cập API first-party và những cơ hội tối ưu mà phần lớn đối thủ không có.
 
+## Thống kê Chính
+
+| Chỉ số | Giá trị |
+|--------|---------|
+| **Tổng số dòng code** | ~512,000 |
+| **Files TypeScript** | ~1,900 |
+| **Công cụ tích hợp** | 40+ |
+| **Lệnh Slash** | 85+ |
+| **Loại Agent** | 6 chuyên biệt |
+| **Runtime** | Bun (hiệu năng cao) |
+| **UI Framework** | React + Ink |
+| **Trang Wiki** | 10 hướng dẫn toàn diện |
+
 ## Kiến trúc Tổng quan
 
 ```mermaid

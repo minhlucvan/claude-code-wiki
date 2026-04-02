@@ -22,6 +22,19 @@
 
 **This isn't just another AI coding tool** — it's built by the team that created Claude, with first-party API access and optimization opportunities competitors don't have.
 
+## Key Statistics
+
+| Metric | Value |
+|--------|-------|
+| **Total Lines of Code** | ~512,000 |
+| **TypeScript Files** | ~1,900 |
+| **Built-in Tools** | 40+ |
+| **Slash Commands** | 85+ |
+| **Agent Types** | 6 specialized |
+| **Runtime** | Bun (high performance) |
+| **UI Framework** | React + Ink |
+| **Wiki Pages** | 10 comprehensive guides |
+
 ## High-Level Architecture
 
 ```mermaid
@@ -267,19 +280,6 @@ Get actionable patterns for production TypeScript/React:
 | [08. Integration Ecosystem](./docs/08-integration-ecosystem.md) | MCP, IDE bridges, and skill system | Dual-role MCP, VS Code/JetBrains, conditional skills |
 | [09. Production Engineering](./docs/09-production-engineering.md) | Optimization patterns and fleet-scale thinking | Startup speed, feature flags, cost optimization |
 | [10. Lessons Learned](./docs/10-lessons-learned.md) | Top takeaways and patterns to steal | Actionable insights, design decisions, tradeoffs |
-
-## Key Statistics
-
-| Metric | Value |
-|--------|-------|
-| **Total Lines of Code** | ~512,000 |
-| **TypeScript Files** | ~1,900 |
-| **Built-in Tools** | 40+ |
-| **Slash Commands** | 85+ |
-| **Agent Types** | 6 specialized |
-| **Runtime** | Bun (high performance) |
-| **UI Framework** | React + Ink |
-| **Wiki Pages** | 10 comprehensive guides |
 
 ## Who This Wiki Is For
 
