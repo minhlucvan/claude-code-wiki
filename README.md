@@ -77,12 +77,6 @@ graph TB
     MCP --> Auth
     Cache --> Bun
     Telemetry --> Bun
-
-    style Terminal fill:#e1f5ff
-    style QueryEngine fill:#fff4e1
-    style AgentCoord fill:#fff4e1
-    style API fill:#ffe1f5
-    style Bun fill:#e1ffe1
 ```
 
 **Key architectural decisions:**
@@ -98,9 +92,9 @@ See [Architecture Overview](./docs/02-architecture-overview.md) for detailed sub
 
 This wiki analyzes the **official Claude Code npm package** available at:
 
-📦 **NPM Package**: [`@anthropic-ai/claude-code`](https://www.npmjs.com/package/@anthropic-ai/claude-code)
-🔗 **Official Website**: [claude.com/code](https://claude.com/code)
-📖 **Official Docs**: [docs.anthropic.com/en/docs/claude-code](https://docs.anthropic.com/en/docs/claude-code)
+- 📦 **NPM Package**: [`@anthropic-ai/claude-code`](https://www.npmjs.com/package/@anthropic-ai/claude-code)
+- 🔗 **Official Website**: [claude.com/code](https://claude.com/code)
+- 📖 **Official Docs**: [docs.anthropic.com/en/docs/claude-code](https://docs.anthropic.com/en/docs/claude-code)
 
 **Analysis methodology:**
 1. **Source extraction** - npm package source maps (March 2026 release v0.8.4)
