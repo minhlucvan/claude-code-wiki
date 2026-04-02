@@ -33,7 +33,7 @@
 | **Agent Types** | 6 specialized |
 | **Runtime** | Bun (high performance) |
 | **UI Framework** | React + Ink |
-| **Wiki Pages** | 10 comprehensive guides |
+| **Wiki Pages** | 11 comprehensive guides |
 
 ## High-Level Architecture
 
@@ -205,7 +205,7 @@ This wiki documents these patterns and techniques so you can learn from and appl
 
 ```
 claude-code-wiki/
-├── docs/                           # 10 comprehensive wiki guides
+├── docs/                           # 11 comprehensive wiki guides
 │   ├── README.md                   # Wiki navigation and overview
 │   ├── 01-competitive-advantages.md   # The 10 unfair advantages
 │   ├── 02-architecture-overview.md    # System design and data flow
@@ -216,7 +216,8 @@ claude-code-wiki/
 │   ├── 07-security-model.md           # AST parsing and permissions
 │   ├── 08-integration-ecosystem.md    # MCP, IDE bridges, skills
 │   ├── 09-production-engineering.md   # Optimization patterns
-│   └── 10-lessons-learned.md          # Key takeaways
+│   ├── 10-lessons-learned.md          # Key takeaways
+│   └── 11-feature-flags.md            # Feature flag architecture
 └── claude-code/                    # Full source code (512K LOC)
     ├── src/                        # TypeScript implementation
     ├── skills/                     # 85+ slash commands
@@ -280,6 +281,8 @@ Get actionable patterns for production TypeScript/React:
 | [08. Integration Ecosystem](./docs/08-integration-ecosystem.md) | MCP, IDE bridges, and skill system | Dual-role MCP, VS Code/JetBrains, conditional skills |
 | [09. Production Engineering](./docs/09-production-engineering.md) | Optimization patterns and fleet-scale thinking | Startup speed, feature flags, cost optimization |
 | [10. Lessons Learned](./docs/10-lessons-learned.md) | Top takeaways and patterns to steal | Actionable insights, design decisions, tradeoffs |
+| [11. Feature Flags](./docs/11-feature-flags.md) | Feature flag architecture and status | Build-time, runtime, GrowthBook, beta headers |
+| [12. Security Vulnerabilities](./docs/12-security-vulnerabilities.md) | Comprehensive security audit | Critical/High/Medium vulnerabilities, remediation |
 
 ## Who This Wiki Is For
 

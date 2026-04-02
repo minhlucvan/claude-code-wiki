@@ -84,6 +84,16 @@ Claude Code represents **production-grade AI tooling** at scale. By analyzing it
     - Architectural patterns to copy
     - Tradeoffs and design decisions
 
+11. **[Feature Flags](./11-feature-flags.md)**
+    - 4-layer feature flag system architecture
+    - Build-time, runtime, GrowthBook, beta headers
+    - Flag status classification and usage patterns
+
+12. **[Security Vulnerabilities](./12-security-vulnerabilities.md)**
+    - Comprehensive security audit and vulnerability analysis
+    - Critical/High/Medium vulnerabilities with CVSS scores
+    - Remediation recommendations and security infrastructure
+
 ## Competitive Positioning Overview
 
 | Feature | Claude Code | Cursor | Continue | Aider |

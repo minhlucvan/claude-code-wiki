@@ -33,7 +33,7 @@
 | **Loại Agent** | 6 chuyên biệt |
 | **Runtime** | Bun (hiệu năng cao) |
 | **UI Framework** | React + Ink |
-| **Trang Wiki** | 10 hướng dẫn toàn diện |
+| **Trang Wiki** | 11 hướng dẫn toàn diện |
 
 ## Kiến trúc Tổng quan
 
@@ -216,7 +216,8 @@ claude-code-wiki/
 │   ├── 07-security-model.md           # Phân tích AST và phân quyền
 │   ├── 08-integration-ecosystem.md    # MCP, cầu nối IDE, skill
 │   ├── 09-production-engineering.md   # Các mẫu tối ưu production
-│   └── 10-lessons-learned.md          # Những bài học rút ra
+│   ├── 10-lessons-learned.md          # Những bài học rút ra
+│   └── 11-feature-flags.md            # Kiến trúc feature flag
 ├── docs_vi/                        # Bộ tài liệu tiếng Việt
 │   ├── README.md                   # Điều hướng và tổng quan
 │   └── ...
@@ -283,6 +284,8 @@ Bạn sẽ tìm thấy nhiều mẫu thực chiến cho TypeScript/React ở mô
 | [08. Integration Ecosystem](./docs_vi/08-integration-ecosystem.md) | MCP, cầu nối IDE và hệ thống skill | MCP hai vai trò, VS Code/JetBrains, skill điều kiện |
 | [09. Production Engineering](./docs_vi/09-production-engineering.md) | Các mẫu tối ưu và tư duy vận hành quy mô lớn | Tốc độ khởi động, feature flag, tối ưu chi phí |
 | [10. Lessons Learned](./docs_vi/10-lessons-learned.md) | Những bài học đáng lấy nhất | Insight thực thi, quyết định thiết kế, trade-off |
+| [11. Feature Flags](./docs/11-feature-flags.md) | Kiến trúc feature flag và trạng thái | Build-time, runtime, GrowthBook, beta headers |
+| [12. Security Vulnerabilities](./docs/12-security-vulnerabilities.md) | Đánh giá bảo mật toàn diện | Lỗ hổng Critical/High/Medium, khắc phục |
 
 ## Các số liệu đáng chú ý
 

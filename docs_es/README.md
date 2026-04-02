@@ -41,8 +41,13 @@ Esta seccion esta pensada para:
 9. **[Ingenieria de produccion](./09-production-engineering.md)**  
    Telemetria, confiabilidad, arranque rapido y operacion a escala.
 
-10. **[Lecciones aprendidas](./10-lessons-learned.md)**  
+10. **[Lecciones aprendidas](./10-lessons-learned.md)**
     Principios de arquitectura y decisiones que valen la pena copiar.
+
+11. **[Vulnerabilidades de seguridad](./12-security-vulnerabilities.md)**
+    Análisis integral de seguridad y evaluación de vulnerabilidades.
+    Vulnerabilidades Critical/High/Medium con puntajes CVSS.
+    Recomendaciones de remediación e infraestructura de seguridad.
 
 ## Como usar estas guias
 

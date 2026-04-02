@@ -81,8 +81,13 @@ Claude Code là một ví dụ rất rõ của **AI tooling ở cấp độ prod
 
 10. **[Lessons Learned](./10-lessons-learned.md)**
     - 10 bài học đáng lấy nhất
-    - Những pattern đáng “mượn”
+    - Những pattern đáng "mượn"
     - Trade-off và quyết định kiến trúc
+
+11. **[Security Vulnerabilities](./12-security-vulnerabilities.md)**
+    - Phân tích bảo mật toàn diện và đánh giá lỗ hổng
+    - Lỗ hổng Critical/High/Medium với điểm CVSS
+    - Khuyến nghị khắc phục và hạ tầng bảo mật
 
 ## So sánh nhanh với đối thủ
 
